@@ -28,7 +28,8 @@ module.exports.routes = {
   "GET /api/products": { action: "product/list" },
   "POST /api/addOrder": { action: "order/add-order" },
   "GET /api/orders": { action: "order/all-order" },
-  "POST /api/changeorderstatus": { action: "order/change-order-status" }
+  "POST /api/changeorderstatus": { action: "order/change-order-status" },
+  "PATCH /api/order/:id/cancel": { action: "order/cancel-order" }
 
   /***************************************************************************
   *                                                                          *
