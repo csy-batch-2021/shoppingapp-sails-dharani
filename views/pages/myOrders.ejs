@@ -91,11 +91,23 @@
         <td>${i}</td>
         <td>${p.user_name}</td>
         <td>${p.name}</td>
-        <td>Rs${p.price}</td>        
+        <td>Rs.${p.price}</td>        
         <td>${p.qty}</td>
-        <td>Rs${p.total_amount}</td>
-        <td>${p.status}</td>
-        <td>${p.created_date}</td>        
+        <td>Rs.${p.total_amount}</td>`
+                if (p.status == "DELIVERED") {
+                    temp += `<td><span class="badge bg-success">${p.status}</span></td>`
+
+                }
+                else if (p.status == "ORDERED") {
+                    temp += `<td><span class="badge bg-warning">${p.status}</span></td>`
+
+                }
+                else if (p.status == "CANCELLED") {
+                    temp += `<td><span class="badge bg-danger">${p.status}</span></td>`
+
+                }
+
+                temp += `<td>${p.created_date}</td>        
         <td>${p.modified_date}</td>     <td>  `
 
                 if (p.status == "ORDERED") {
@@ -176,7 +188,7 @@
     }
     function ratingPrompt(productId) {
         // console.log("productId", productId);
-        var userAdjective = prompt("Please provide an Adjective");
+        var userAdjective = prompt("Please Enter Product Rating");
         var values = parseInt(userAdjective);
         console.log("values", values);
         if (values) {
@@ -201,9 +213,10 @@
             else {
                 toastr.error("please Enter Valid Rating (1 to 5)");
             }
-        } else {
-            toastr.error("please Enter Valid Rating (1 to 5)");
-        }
+        } 
+        // else {
+        //     toastr.error("please Enter Valid Rating (1 to 5)");
+        // }
     }
 
 
