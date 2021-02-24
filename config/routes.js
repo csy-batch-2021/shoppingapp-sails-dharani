@@ -20,7 +20,15 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': { view: 'pages/homepage' },
+  "get /allProducts": { view: "pages/allProducts" },
+  "get /orders": { view: "pages/orders" },
 
+
+  //REST API
+  "GET /api/products": { action: "product/list" },
+  "POST /api/addOrder": { action: "order/add-order" },
+  "GET /api/orders": { action: "order/all-order" },
+  "POST /api/changeorderstatus": { action: "order/change-order-status" }
 
   /***************************************************************************
   *                                                                          *
