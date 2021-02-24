@@ -178,11 +178,11 @@
             // confirm("Are you sure you want to save this thing into the database?");
             if (confirm('Do you want to cancel this order?')) {
                 // let url = "http://localhost:3000/api/cancelOrder";
-                let url = "/api/cancelOrder";
+                let url = "/api/order/" + id + "/cancel";
                 // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
                 // let userId = loggedInUser.id;
-                let cancelOrderDetails = { userId: 1, orderId: id }
-                axios.post(url, cancelOrderDetails).then(response => {
+                let cancelOrderDetails = { userId: 79 }
+                axios.patch(url, cancelOrderDetails).then(response => {
                     // productOrderAPI.orderProduct(orderObj).then(response => {
                     console.log(response);
                     // document.getElementById("errorMessage").innerHTML = response.data;
@@ -192,8 +192,9 @@
 
                 }).catch(err => {
                     // console.error("Erroro", );   
+                    toastr.error(err.response.data.message);
 
-                    document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                    // document.getElementById("errorMessage").innerHTML = err.response.data.message;
                 });
 
 
