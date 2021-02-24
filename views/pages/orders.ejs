@@ -135,8 +135,8 @@
             });
 
             function deliveryStatusChange(orderId) {
-                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
-                let loggedInUserId = loggedInUser.id;
+                // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                // let loggedInUserId = loggedInUser.id;
 
                 let userDetails = { loggedInUserId: 79, orderId: orderId, status: "DELIVERED" }
 
@@ -162,7 +162,7 @@
             }
 
         }
-        let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+        // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
         loadProducts();
 
         // if (loggedInUser.role == "ADMIN") {
@@ -179,8 +179,8 @@
             if (confirm('Do you want to cancel this order?')) {
                 // let url = "http://localhost:3000/api/cancelOrder";
                 let url = "/api/cancelOrder";
-                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
-                let userId = loggedInUser.id;
+                // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                // let userId = loggedInUser.id;
                 let cancelOrderDetails = { userId: 1, orderId: id }
                 axios.post(url, cancelOrderDetails).then(response => {
                     // productOrderAPI.orderProduct(orderObj).then(response => {
