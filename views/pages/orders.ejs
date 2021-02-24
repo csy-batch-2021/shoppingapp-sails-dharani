@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="node_modules/shoppingapp/ProductApi.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+        crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <header id="header"></header>
+    <div class="container-fluid">
+        All Orders:
+        <br>
+        <a href="userReport.html">
+            <button>User Report</button>
+        </a>
+        <a href="productReport.html">
+            <button>Product Report</button>
+        </a>
+        <a href="statusReport.html">
+            <button>Status Report</button>
+        </a>
+        <br>
+        <br>
+
+        <div id="errorMessage"></div>
+        <table border="1" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sno</th>
+                    <th>User</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Ordered On</th>
+                    <th>Last Modified On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="order-tbl">
+
+            </tbody>
+
+
+        </table>
+    </div>
+    <script>
+        function loadProducts() {
+            // const productSearchAPI = new ProductSearchAPI();
+            // let url = "https://shopping-app-rest-api.herokuapp.com/activeproducts";
+
+            // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+            // let userId = loggedInUser.id;
+            // let userId = 1;
+            // let url = "http://localhost:3000/api/orders";
+            let url = "/api/orders";
+            axios.get(url).then(response => {
+                // console.table(response.data);
+                displayProducts(response.data);
+            });
+        }
+
+
+
+
+        //Display the product details  in a table
+        function displayProducts(products) {
+
+            const tbody = document.querySelector("#order-tbl");
+            tbody.innerHTML = "";
+            let content = "";
+            let i = 1;
+
+            // console.log("products", products.length);
+            if (products.length != 0) {
+                for (let p of products) {
+
+                    let temp = ` <tr>
+        <td>${i}</td>
+        <td>${p.user_name}</td>
+        <td>${p.name}</td>
+        <td>Rs${p.price}</td>        
+        <td>${p.qty}</td>
+        <td>Rs${p.total_amount}</td>
+        <td>${p.status}</td>
+        <td>${p.created_date}</td>        
+        <td>${p.modified_date}</td> <td>`
+
+                    if (p.status == "ORDERED") {
+                        temp += `<button type = "button"  id = "order-btn1" data-product-id=${p.id}> Delivered</button >`
+                        temp += ` <button type="button" onclick="orderCancel(${p.id})" id="cancel-btn1" data-cancel-id=${p.id}>Cancel</button>`
+                    }
+
+                    `</td ></tr >`;
+
+                    content += temp;
+                    i++;
+                }
+            }
+            else {
+                content = "No Records Found"
+            }
+            // console.log(content);
+            tbody.innerHTML = content;
+
+
+
+
+            //Assign Listeners
+            document.querySelectorAll("#order-btn1").forEach(element => {
+                let orderId = parseInt(element.getAttribute("data-product-id"));
+                // console.log("productId", orderId);
+                element.addEventListener('click', e => {
+                    deliveryStatusChange(orderId);
+
+                });
+            });
+
+            function deliveryStatusChange(orderId) {
+                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                let loggedInUserId = loggedInUser.id;
+
+                let userDetails = { loggedInUserId: 79, orderId: orderId, status: "DELIVERED" }
+
+                console.log("userDetails", userDetails);
+
+                // let url = "http://localhost:3000/api/changeorderstatus";
+                let url = "/api/changeorderstatus";
+
+                axios.post(url, userDetails).then(response => {
+                    // productOrderAPI.orderProduct(orderObj).then(response => {
+                    console.log(response.data);
+                    toastr.success("Order Status Changed Successfully");
+                    // document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                    // window.location.href = "orders.html";
+                    loadProducts();
+
+                }).catch(err => {
+                    console.error("Erroro", err);
+
+                    document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                });
+
+            }
+
+        }
+        let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+        loadProducts();
+
+        // if (loggedInUser.role == "ADMIN") {
+        // } else {
+        //     toastr.error("You Are Not Authorized");
+        //     window.setTimeout(function () {
+        //         window.location = "products.html";
+        //     }, 1500);
+        // }
+
+        function orderCancel(id) {
+            console.log("Cancel order id", id);
+            // confirm("Are you sure you want to save this thing into the database?");
+            if (confirm('Do you want to cancel this order?')) {
+                // let url = "http://localhost:3000/api/cancelOrder";
+                let url = "/api/cancelOrder";
+                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                let userId = loggedInUser.id;
+                let cancelOrderDetails = { userId: 1, orderId: id }
+                axios.post(url, cancelOrderDetails).then(response => {
+                    // productOrderAPI.orderProduct(orderObj).then(response => {
+                    console.log(response);
+                    // document.getElementById("errorMessage").innerHTML = response.data;
+                    toastr.success("Order Cancelled Success");
+                    loadProducts();
+                    // window.location.href = "orders.html";
+
+                }).catch(err => {
+                    // console.error("Erroro", );   
+
+                    document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                });
+
+
+            } else {
+                // Do nothing!
+                console.log('Thing was not saved to the database.');
+            }
+        }
+
+
+
+        $("#header").load("_header.html");
+
+    </script>
+</body>
+
+</html>
