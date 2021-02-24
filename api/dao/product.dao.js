@@ -23,12 +23,22 @@ class ProductDAO {
         return data;
 
     }
+    static async findActive() {
+        let ds = await sails.getDatastore();
+
+        const result = await ds.sendNativeQuery(
+            "select p.*,(select round(avg(r.rating)) from  product_ratings r where product_id=p.id)as rating from products p  where active=1",
+        );
+        let data = result.rows;
+        return data;
+    }
 }
 
 
 module.exports = {
     getAllProducts: ProductDAO.getAllProducts,
     findOne: ProductDAO.findOne,
-    searchProducts: ProductDAO.searchProducts
+    searchProducts: ProductDAO.searchProducts,
+    findActive: ProductDAO.findActive
 
 }

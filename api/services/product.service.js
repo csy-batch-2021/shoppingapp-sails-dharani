@@ -33,10 +33,20 @@ class ProductService {
             throw new Error("Not able to fetch the products");
         }
     }
+    // to get all products
+    static async getActiveProduct(params) {
+        try {
+            var activeProduct = await ProductDAO.findActive();
+            return activeProduct;
+        } catch (err) {
+            throw new Error("Not able to fetch active products");
+        }
+    }
 
 }
 module.exports = {
     getAllProducts: ProductService.getAllProducts,
     getProductDetails: ProductService.getProductDetails,
-    searchProducts: ProductService.searchProducts
+    searchProducts: ProductService.searchProducts,
+    getActiveProduct: ProductService.getActiveProduct
 }

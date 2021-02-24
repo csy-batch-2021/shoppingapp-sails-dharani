@@ -19,9 +19,13 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': { view: 'pages/homepage' },
-  "get /allProducts": { view: "pages/allProducts" },
+  '/': { view: 'pages/homepage', layout: 'layouts/layout' },
+  "get /products": { view: "pages/products" },
   "get /orders": { view: "pages/orders" },
+  "get /login": { view: "pages/login" },
+  "get /allProducts": { view: "pages/allProducts" },
+
+
 
 
   //REST API
@@ -30,7 +34,9 @@ module.exports.routes = {
   "GET /api/orders": { action: "order/all-order" },
   "POST /api/changeorderstatus": { action: "order/change-order-status" },
   "PATCH /api/order/:id/cancel": { action: "order/cancel-order" },
-  "GET /api/product/search": { action: "product/search-product" }
+  "GET /api/product/search": { action: "product/search-product" },
+  "GET /api/getAllProducts": { action: "product/get-all-products" }
+
 
   /***************************************************************************
   *                                                                          *
