@@ -55,6 +55,24 @@ class OrderDAO {
         return data;
     }
 
+    static async findMyOrder(userId) {
+        let params = [userId];
+        const sql = "select o.id,u.user_name,p.name,(p.id)as product_id,p.brand_name,p.price,o.qty,o.total_amount,o.status,o.created_date,o.modified_date from users u, products p,orders o where o.user_id=u.id AND o.product_id=p.id AND o.user_id=$1";
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery(sql, params);
+        let data = result.rows;
+        return data;
+    }
+    static async myOrdersStatusCount(userId) {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery(
+            "select status,count(*) as count from users u, products p,orders o where o.user_id=u.id AND o.product_id=p.id AND o.user_id=$1 group by status",
+            [userId]
+        );
+        let data = result.rows;
+        return data;
+    }
+
 }
 
 module.exports = {
@@ -62,5 +80,8 @@ module.exports = {
     findAll: OrderDAO.findAll,
     findOneAndUpdate: OrderDAO.findOneAndUpdate,
     findOne: OrderDAO.findOne,
-    cancelOrder: OrderDAO.cancelOrder
+    cancelOrder: OrderDAO.cancelOrder,
+    findMyOrder: OrderDAO.findMyOrder,
+    myOrdersStatusCount: OrderDAO.myOrdersStatusCount
+
 }

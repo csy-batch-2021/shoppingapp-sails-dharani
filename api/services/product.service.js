@@ -1,5 +1,8 @@
 const ProductDAO = require("../dao/product.dao");
-const Products = require("../models/Products")
+const Products = require("../models/Products");
+const UserValidator = require("../validator/userValidator");
+const ProductValidator = require("../validator/productValidator");
+const ProductRatingDAO = require("../dao/productRating.dao");
 class ProductService {
     static async getAllProducts() {
         try {
@@ -42,11 +45,30 @@ class ProductService {
             throw new Error("Not able to fetch active products");
         }
     }
+    static async addProductRating(productRatingDetails) {
+        console.log("productRatingDetails", productRatingDetails);
+
+        try {
+            await UserValidator.toCheckValidUserId(productRatingDetails.userId);
+            await ProductValidator.toCheckValidProductId(
+                productRatingDetails.productId
+            );
+            productRatingDetails.created_by = productRatingDetails.userId;
+            productRatingDetails.modified_by = productRatingDetails.userId;
+            // productRatingsDetails.
+            let result = await ProductRatingDAO.save(productRatingDetails);
+            return result;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
 
 }
 module.exports = {
     getAllProducts: ProductService.getAllProducts,
     getProductDetails: ProductService.getProductDetails,
     searchProducts: ProductService.searchProducts,
-    getActiveProduct: ProductService.getActiveProduct
+    getActiveProduct: ProductService.getActiveProduct,
+    addProductRating: ProductService.addProductRating
 }

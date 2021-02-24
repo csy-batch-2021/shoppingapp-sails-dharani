@@ -71,6 +71,21 @@ class OrderService {
             throw err;
         }
     }
+    // to find by order based on user id
+    static async getMyOrder(userId) {
+        let myOrder = await OrderDAO.findMyOrder(userId);
+        return myOrder;
+        // console.log(myOrder);
+    }
+
+    static async myOrderStatusCount(userId) {
+        try {
+            let orderValues = await OrderDAO.myOrdersStatusCount(userId);
+            return orderValues;
+        } catch (err) {
+            throw new Error("Not able to fetch the orders");
+        }
+    }
 }
 
 module.exports = {
@@ -78,4 +93,6 @@ module.exports = {
     getAllOrder: OrderService.getAllOrder,
     changeOrderStatus: OrderService.changeOrderStatus,
     cancelOrder: OrderService.cancelOrder,
+    getMyOrder: OrderService.getMyOrder,
+    myOrderStatusCount: OrderService.myOrderStatusCount
 }

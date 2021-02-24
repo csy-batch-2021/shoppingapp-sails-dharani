@@ -1,0 +1,215 @@
+ My Orders:
+<div id="errorMessage"> </div>
+<label>Ordered:
+</label>
+<span id="orderedCount"></span>
+<label>Delivered:
+</label>
+<span id="deliveredCount"></span>
+<label>Cancelled:
+</label>
+<span id="cancelledCount"></span>
+
+
+<table border="1" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sno</th>
+            <th>User</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Ordered On</th>
+            <th>Last Modified On</th>
+
+
+            <th>Action</th>
+            <th>Rating</th>
+
+        </tr>
+    </thead>
+    <tbody id="order-tbl">
+
+    </tbody>
+
+
+</table>
+<script>
+    function loadProducts() {
+        let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+        let userId = loggedInUser.id;
+        // let userId = 1;
+
+        getOrderStatusCount(userId);
+        // let url = "http://localhost:3000/api/myorders?userId=" + userId;
+        let url = "/api/myorders?userId=" + userId;
+
+        axios.get(url).then(response => {
+            displayProducts(response.data);
+        });
+    }
+
+
+    function getOrderStatusCount(userId) {
+        let url = "/api/orderStatusCount?userId=" + userId;
+        axios.get(url).then(response => {
+            displayOrderStatusCount(response.data);
+        });
+
+    }
+
+    function displayOrderStatusCount(orderDetails) {
+        let map = {};
+        orderDetails.forEach(o => {
+            console.log(o);
+            map[o.status] = o.count;
+        });
+        console.log("map", map);
+
+        document.querySelector("#orderedCount").innerHTML = map["ORDERED"] ? map["ORDERED"] : 0;
+        document.querySelector("#deliveredCount").innerHTML = map["DELIVERED"] ? map["DELIVERED"] : 0;
+        document.querySelector("#cancelledCount").innerHTML = map["CANCELLED"] ? map["CANCELLED"] : 0;
+
+
+    }
+
+    //Display the product details  in a table
+    function displayProducts(products) {
+
+        const tbody = document.querySelector("#order-tbl");
+        tbody.innerHTML = "";
+        let content = "";
+        let i = 1;
+
+        // console.log("products", products.length);
+        if (products.length != 0) {
+            for (let p of products) {
+
+                let temp = ` <tr>
+        <td>${i}</td>
+        <td>${p.user_name}</td>
+        <td>${p.name}</td>
+        <td>Rs${p.price}</td>        
+        <td>${p.qty}</td>
+        <td>Rs${p.total_amount}</td>
+        <td>${p.status}</td>
+        <td>${p.created_date}</td>        
+        <td>${p.modified_date}</td>     <td>  `
+
+                if (p.status == "ORDERED") {
+                    temp = temp +
+
+                        `<button type="button"  id="order-btn1" data-product-id=${p.id}>Cancel</button>`;
+                }
+
+
+                temp = temp + `</td>`
+                temp += ` <td><button type="button" onclick="ratingPrompt(${p.product_id})"  id="rating-btn1" data-product-id=${p.product_id}> Rating</button> </td> </tr>`;
+
+                content += temp;
+                i++;
+            }
+        }
+        else {
+            content = "No Records Found"
+        }
+        // console.log(content);
+        tbody.innerHTML = content;
+
+        //Assign Listeners
+        document.querySelectorAll("#order-btn1").forEach(element => {
+            let orderId = parseInt(element.getAttribute("data-product-id"));
+            console.log("productId", orderId);
+            element.addEventListener('click', e => {
+                cancelOrder(orderId);
+
+            });
+        });
+
+        function cancelOrder(orderId) {
+
+            console.log(orderId);
+
+            // console.log("Cancel order id", id);
+            // confirm("Are you sure you want to save this thing into the database?");
+            if (confirm('Do you want to cancel this order?')) {
+                // let url = "http://localhost:3000/api/cancelOrder";
+                let url = "/api/order/" + orderId + "/cancel";
+                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                let userId = loggedInUser.id;
+                let cancelOrderDetails = { userId: userId }
+                axios.patch(url, cancelOrderDetails).then(response => {
+                    // productOrderAPI.orderProduct(orderObj).then(response => {
+                    console.log(response.data);
+                    toastr.success("Order Cancelled Success");
+                    loadProducts();
+                    // document.getElementById("errorMessage").innerHTML = response.data;
+                    // window.location.href = "orders.html";
+
+                }).catch(err => {
+                    // console.error("Erroro", );   
+
+                    document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                });
+
+                // let url = "http://localhost:3000/cancelOrder?orderId=" + orderId;
+
+                // axios.patch(url, null).then(response => {
+                //     // productOrderAPI.orderProduct(orderObj).then(response => {
+                //     console.log(response.data);
+                //     document.getElementById("errorMessage").innerHTML = response.data;
+                //     // window.location.href = "orders.html";
+
+                // }).catch(err => {
+                //     // console.error("Erroro", );   
+
+                //     document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                // });
+            } else {
+                // Do nothing!
+                console.log('Thing was not saved to the database.');
+            }
+        }
+
+    }
+    function ratingPrompt(productId) {
+        // console.log("productId", productId);
+        var userAdjective = prompt("Please provide an Adjective");
+        var values = parseInt(userAdjective);
+        console.log("values", values);
+        if (values) {
+            if (values >= 1 && values <= 5) {
+                // alert(values);
+                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                let userId = loggedInUser.id;
+
+                let ratingObjectValues = { userId: userId, productId: productId, rating: values }
+                console.log("ratingObjectValues", ratingObjectValues);
+                let url = "/api/product/addRating";
+
+                axios.post(url, ratingObjectValues).then(response => {
+                    console.log(response.data);
+                    toastr.success("Rating Added Successfully");
+                    loadProducts();
+                }).catch(err => {
+                    toastr.error(err.response.data.message);
+                });
+
+            }
+            else {
+                toastr.error("please Enter Valid Rating (1 to 5)");
+            }
+        } else {
+            toastr.error("please Enter Valid Rating (1 to 5)");
+        }
+    }
+
+
+    loadProducts();
+
+    $("#header").load("_header.html");
+
+
+</script>

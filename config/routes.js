@@ -24,6 +24,8 @@ module.exports.routes = {
   "get /orders": { view: "pages/orders" },
   "get /login": { view: "pages/login" },
   "get /allProducts": { view: "pages/allProducts" },
+  "get /myOrders": { view: "pages/myOrders" },
+
 
 
 
@@ -35,7 +37,14 @@ module.exports.routes = {
   "POST /api/changeorderstatus": { action: "order/change-order-status" },
   "PATCH /api/order/:id/cancel": { action: "order/cancel-order" },
   "GET /api/product/search": { action: "product/search-product" },
-  "GET /api/getAllProducts": { action: "product/get-all-products" }
+  "GET /api/getAllProducts": { action: "product/get-all-products" },
+  "GET /api/myOrders": { action: "order/my-orders" },
+  "GET /api/orderStatusCount": { action: "order/my-orders-count" },
+  "POST /api/product/addRating": { action: "product/add-product-rating" },
+
+
+
+
 
 
   /***************************************************************************
