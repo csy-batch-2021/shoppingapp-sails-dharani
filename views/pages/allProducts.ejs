@@ -174,16 +174,17 @@
 
 
         function filterProducts(filterObj) {
+            let brandName = filterObj.brandName.join(",");
+            console.log("filterObj", brandName);
 
-            console.log("filterObj", filterObj);
-            // const productSearchAPI = new ProductSearchAPI();
-            // let url = "http://localhost:3000/api/searchProducts";
-            let url = "https://shopping-app-rest-api.herokuapp.com/api/searchProducts";
+
+            let url = "/api/product/search?brandName=" + brandName;
+            // let url = "https://shopping-app-rest-api.herokuapp.com/api/searchProducts";
             // productSearchAPI.searchProducts(filterObj).then(response => {
             //     console.table(response);
             //     displayProducts(response);
             // }
-            axios.post(url, filterObj).then(response => {
+            axios.get(url).then(response => {
                 // console.table(response.data);
                 displayProducts(response.data);
 

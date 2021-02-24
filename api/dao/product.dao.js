@@ -16,11 +16,19 @@ class ProductDAO {
         let data = result.rows;
         return data;
     }
+    static async searchProducts(brandName) {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery("select * from products where brand_name IN($1)", [brandName]);
+        let data = result.rows;
+        return data;
+
+    }
 }
 
 
 module.exports = {
     getAllProducts: ProductDAO.getAllProducts,
     findOne: ProductDAO.findOne,
+    searchProducts: ProductDAO.searchProducts
 
 }

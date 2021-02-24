@@ -48,9 +48,7 @@ class OrderDAO {
         let params = ["CANCELLED", orderDetails.userId, orderDetails.orderId];
         const sql =
             "UPDATE orders SET status=$1,modified_by=$2,modified_date=now() where id=$3";
-        // console.log("sql query", sql);
         let ds = await sails.getDatastore();
-
         const result = await ds.sendNativeQuery(sql, params);
         let data = result.rows;
 

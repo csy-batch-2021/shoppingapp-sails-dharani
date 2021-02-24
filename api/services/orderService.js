@@ -56,7 +56,6 @@ class OrderService {
     // to cancel order
     static async cancelOrder(orderDetails) {
         try {
-            console.log("orderDetails", orderDetails);
 
             let userId = orderDetails.userId;
             let orderId = orderDetails.orderId;

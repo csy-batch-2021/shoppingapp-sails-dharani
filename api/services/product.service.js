@@ -23,8 +23,20 @@ class ProductService {
             throw err;
         }
     }
+
+    static async searchProducts(brandNames) {
+        try {
+            let products = await ProductDAO.searchProducts(brandNames);
+            return products;
+        } catch (err) {
+            console.log(err);
+            throw new Error("Not able to fetch the products");
+        }
+    }
+
 }
 module.exports = {
     getAllProducts: ProductService.getAllProducts,
-    getProductDetails: ProductService.getProductDetails
+    getProductDetails: ProductService.getProductDetails,
+    searchProducts: ProductService.searchProducts
 }
