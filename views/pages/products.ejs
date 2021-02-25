@@ -122,25 +122,32 @@
             console.log("placing order", productId);
             let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
             let userId = loggedInUser.id;
-            let orderObj = { productId: productId, qty: 1, userId: userId };
-            console.log(orderObj);
-            // const productOrderAPI = new ProductOrderAPI();
-            // let url = "http://localhost:3000/api/addOrder";
-            let url = "/api/addOrder";
-            axios.post(url, orderObj).then(response => {
-                // productOrderAPI.orderProduct(orderObj).then(response => {
-                console.log(response.data);
-                toastr.success("Product Added Successfully");
+            var userAdjective = prompt("Please Enter Product Quantity");
+            var values = parseInt(userAdjective);
+            if (values) {
+                let orderObj = { productId: productId, qty: values, userId: userId };
+                console.log(orderObj);
+                // const productOrderAPI = new ProductOrderAPI();
+                // let url = "http://localhost:3000/api/addOrder";
+                let url = "/api/addOrder";
+                axios.post(url, orderObj).then(response => {
+                    // productOrderAPI.orderProduct(orderObj).then(response => {
+                    console.log(response.data);
+                    toastr.success("Order Added Successfully");
 
-                // document.getElementById("errorMessage").innerHTML = response.data;
+                    // document.getElementById("errorMessage").innerHTML = response.data;
 
-                // window.location.href = "myorders.html";
+                    window.location.href = "myorders";
 
-            }).catch(err => {
-                console.error("Erroro", err.response.data.message);
-                toastr.error(err.response.data.message);
-                // document.getElementById("errorMessage").innerHTML = err.response.data.message;
-            });
+                }).catch(err => {
+                    console.error("Erroro", err.response.data.message);
+                    toastr.error(err.response.data.message);
+                    // document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                });
+
+            }
+
+
         }
 
         // Get the products from the REST API
