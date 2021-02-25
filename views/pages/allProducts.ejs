@@ -19,6 +19,8 @@
             <th>Rating</th>
             <th>Price</th>
             <th>Status</th>
+            <th>Action</th>
+
         </tr>
     </thead>
     <tbody id="products-tbl">
@@ -91,7 +93,11 @@
                     temp += `<button type = "button" onClick="changeStatus(${p.id},false)" id ="product-btn1" data-product-id=${p.id}>Disable</button>`
                 }
 
-                temp += `</td></tr >`;
+                temp += `</td>
+                <td>  <button type = "button" onClick="editProduct(${p.id})"  data-product-id=${p.id}>Edit</button>
+                    <button type = "button" onClick="deleteProduct(${p.id})"  data-product-id=${p.id}>Delete</button>
+                    </td>
+                </tr >`;
 
                 content += temp;
                 i++;
@@ -112,6 +118,38 @@
 
         //     });
         // });
+
+    }
+
+    function editProduct(productId) {
+        console.log("productId", productId);
+        var userAdjective = prompt("Enter Product Amount");
+        var values = parseInt(userAdjective);
+        if (values) {
+            let url = "/api/product/UpdateProduct";
+            let productValues = { productId: productId, amount: values };
+
+            axios.patch(url, productValues).then(response => {
+                console.log(response.data.message);
+                toastr.success(response.data.message);
+                loadProducts();
+            }).catch(err => {
+                toastr.error(err.response.data.message);
+            });
+
+
+        }
+    }
+
+    function deleteProduct(productId) {
+        let url = "/api/product/delete/" + productId;
+        axios.delete(url).then(response => {
+            console.log(response.data.message);
+            // toastr.success(response.data.message);
+            loadProducts();
+        }).catch(err => {
+            toastr.error(err.response.data.message);
+        });
 
     }
 

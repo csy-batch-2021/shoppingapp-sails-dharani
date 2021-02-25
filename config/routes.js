@@ -41,6 +41,10 @@ module.exports.routes = {
   "GET /api/myOrders": { action: "order/my-orders" },
   "GET /api/orderStatusCount": { action: "order/my-orders-count" },
   "POST /api/product/addRating": { action: "product/add-product-rating" },
+  "PATCH /api/product/UpdateProduct": { action: "product/update-product" },
+  "DELETE /api/product/delete/:productId": { action: "product/delete-product" },
+
+
 
 
 

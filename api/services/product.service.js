@@ -63,6 +63,24 @@ class ProductService {
             throw err;
         }
     }
+    static async updateProduct(productValues) {
+        try {
+            await ProductValidator.toCheckValidProductId(productValues.productId);
+            var result = await ProductDAO.findOneAndUpdate(productValues);
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+    static async deleteProduct(productId) {
+        try {
+            await ProductValidator.toCheckOrderedProduct(productId);
+            let productResult = await ProductDAO.deleteProduct(productId);
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
 
 }
 module.exports = {
@@ -70,5 +88,7 @@ module.exports = {
     getProductDetails: ProductService.getProductDetails,
     searchProducts: ProductService.searchProducts,
     getActiveProduct: ProductService.getActiveProduct,
-    addProductRating: ProductService.addProductRating
+    addProductRating: ProductService.addProductRating,
+    updateProduct: ProductService.updateProduct,
+    deleteProduct: ProductService.deleteProduct
 }

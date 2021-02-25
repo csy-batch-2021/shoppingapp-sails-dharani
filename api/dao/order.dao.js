@@ -43,6 +43,13 @@ class OrderDAO {
         let order = data.length > 0 ? data[0] : null;
         return order;
     }
+    static async findProductId(productId) {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery("select * from orders where product_id=$1", [productId]);
+        let data = result.rows;
+        // let order = data.length > 0 ? data[0] : null;
+        return data;
+    }
 
     static async cancelOrder(orderDetails) {
         let params = ["CANCELLED", orderDetails.userId, orderDetails.orderId];
@@ -82,6 +89,7 @@ module.exports = {
     findOne: OrderDAO.findOne,
     cancelOrder: OrderDAO.cancelOrder,
     findMyOrder: OrderDAO.findMyOrder,
-    myOrdersStatusCount: OrderDAO.myOrdersStatusCount
+    myOrdersStatusCount: OrderDAO.myOrdersStatusCount,
+    findProductId: OrderDAO.findProductId
 
 }

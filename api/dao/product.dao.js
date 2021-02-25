@@ -32,6 +32,22 @@ class ProductDAO {
         let data = result.rows;
         return data;
     }
+    static async findOneAndUpdate(productValues) {
+        console.log("productValuesDAO", productValues);
+        let params = [productValues.productId, productValues.amount]
+        let sql = "UPDATE products set price=$2 where id=$1";
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery(sql, params);
+        let data = result.rows;
+        return data;
+
+    }
+    static async deleteProduct(productId) {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery("delete from products where id=$1", [productId]);
+        let data = result.rows;
+        return data;
+    }
 }
 
 
@@ -39,6 +55,8 @@ module.exports = {
     getAllProducts: ProductDAO.getAllProducts,
     findOne: ProductDAO.findOne,
     searchProducts: ProductDAO.searchProducts,
-    findActive: ProductDAO.findActive
+    findActive: ProductDAO.findActive,
+    findOneAndUpdate: ProductDAO.findOneAndUpdate,
+    deleteProduct: ProductDAO.deleteProduct
 
 }

@@ -135,10 +135,10 @@
             });
 
             function deliveryStatusChange(orderId) {
-                // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
-                // let loggedInUserId = loggedInUser.id;
+                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                let loggedInUserId = loggedInUser.id;
 
-                let userDetails = { loggedInUserId: 79, orderId: orderId, status: "DELIVERED" }
+                let userDetails = { loggedInUserId: loggedInUserId, orderId: orderId, status: "DELIVERED" }
 
                 console.log("userDetails", userDetails);
 
@@ -179,9 +179,9 @@
             if (confirm('Do you want to cancel this order?')) {
                 // let url = "http://localhost:3000/api/cancelOrder";
                 let url = "/api/order/" + id + "/cancel";
-                // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
-                // let userId = loggedInUser.id;
-                let cancelOrderDetails = { userId: 79 }
+                let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+                let userId = loggedInUser.id;
+                let cancelOrderDetails = { userId: userId }
                 axios.patch(url, cancelOrderDetails).then(response => {
                     // productOrderAPI.orderProduct(orderObj).then(response => {
                     console.log(response);
