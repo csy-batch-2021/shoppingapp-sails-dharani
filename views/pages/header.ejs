@@ -1,0 +1,103 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">ShoppingApp</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item" data-loggedin="true" data-role="USER">
+                    <a class="nav-link" href="products">Products</a>
+                </li>
+                <li class="nav-item" data-loggedin="true" data-role="ADMIN">
+                    <a class="nav-link" href="allproducts">All Products</a>
+                </li>
+
+                <li class="nav-item" data-loggedin="true" data-role="ADMIN">
+                    <a class="nav-link" href="orders">Orders</a>
+                </li>
+                <li class="nav-item" data-loggedin="true" data-role="USER">
+                    <a class="nav-link" href="myorders">My Orders</a>
+                </li>
+                <li class="nav-item dropdown" data-loggedin="true" data-role="ADMIN">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-loggedin="true" data-role="ADMIN">
+                        Reports
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="userReport" data-loggedin="true" data-role="ADMIN">User
+                                Report</a></li>
+                        <li><a class="dropdown-item" href="productReport" data-loggedin="true" data-role="ADMIN">Product
+                                Report</a></li>
+                        <li><a class="dropdown-item" href="statusReport" data-loggedin="true" data-role="ADMIN">Status
+                                Report</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                <li class="nav-item" data-loggedin="false">
+                    <a class="nav-link" href="login">Login</a>
+                </li>
+
+                <li class="nav-item  " data-loggedin="true">
+                    <a class="nav-link" style="display: block;" id="userdetail">Welcome </a>
+                </li>
+                <li class="nav-item " data-loggedin="true">
+                    <a class="nav-link" id="signout" href="#" onclick="logout()" data-loggedin="true">(Logout)
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<script>
+    const user = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+    console.log("LOGGED_IN_USER", user);
+    if (user) {
+        $("#userdetail").html("Welcome " + user.user_name + "(" + user.id + ")" +
+
+            "&nbsp; &nbsp; ROLE:" + user.role);
+        console.log("User is logged in");
+        // Hide menus which has data-loggedin=false
+        // Show menus which has data-loggedin=true
+        document.querySelectorAll(".nav-link[data-loggedin=false] , .nav-item[data-loggedin=false] , .dropdown-item[data-loggedin=false],.dropdown-menu[data-loggedin=false]").forEach(obj => obj.style.display = "none");
+        document.querySelectorAll(".nav-link[data-loggedin=true] ,  .nav-item[data-loggedin=true] , .dropdown-item[data-loggedin=true], .dropdown-item[data-loggedin=true]").forEach(obj => obj.style.display = "block");
+
+        //role restriction
+        if (user.role == "ADMIN") {
+            document.querySelectorAll(".nav-link[data-role='USER'] , .nav-item[data-role='USER'], .dropdown-menu[data-role='USER'], .dropdown-item[data-role='USER']").forEach(obj => obj.style.display = "none");
+            document.querySelectorAll(".nav-link[data-role='ADMIN'] , .nav-item[data-role='ADMIN'], .dropdown-menu[data-role='ADMIN'],.dropdown-item[data-role='ADMIN']").forEach(obj => obj.style.display = "block");
+        }
+        else if (user.role == "USER") {
+            document.querySelectorAll(".nav-link[data-role='ADMIN'] , .nav-item[data-role='ADMIN'], .dropdown-menu[data-role='ADMIN'],.dropdown-item[data-role='ADMIN']").forEach(obj => obj.style.display = "none");
+            document.querySelectorAll(".nav-link[data-role='USER'] , .nav-item[data-role='USER'], .dropdown-menu[data-role='USER'],.dropdown-item[data-role='USER']").forEach(obj => obj.style.display = "block");
+        }
+    }
+    else {
+
+        console.log("User is not logged in");
+        // Hide menus which has data-loggedin=true
+        // Show menus which has data-loggedin=false
+        document.querySelectorAll(".nav-link[data-loggedin=true] , .nav-item[data-loggedin=true] , .dropdown-item[data-loggedin=true]").forEach(obj => obj.style.display = "none");
+        document.querySelectorAll(".nav-link[data-loggedin=false], .nav-item[data-loggedin=false] , .dropdown-item[data-loggedin=false]").forEach(obj => obj.style.display = "block");
+
+    }
+
+    function logout() {
+        // localStorage.clear();
+        localStorage.removeItem("LOGGED_IN_USER");
+
+        window.location.href = "login";
+    }
+
+
+
+
+
+</script>
