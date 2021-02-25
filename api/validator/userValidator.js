@@ -11,17 +11,14 @@ class UserValidator {
 
     static async isAdmin(userId) {
         var result = await UserDAO.findOne(userId);
-        try {
-            if (result) {
-                if (!result.role == "ADMIN") {
-                    throw new Error("You Are Not Authorized");
-                }
-            } else {
-                throw new Error("Please Enter Valid UserID");
+        if (result) {
+            if (result.role != "ADMIN") {
+                throw new Error("You Are Not Authorized");
             }
-        } catch (err) {
-            res.status(400).json({ message: err.message });
+        } else {
+            throw new Error("Please Enter Valid UserID");
         }
+
     }
 
 }

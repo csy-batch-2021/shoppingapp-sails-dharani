@@ -63,18 +63,34 @@
         </table>
     </div>
     <script>
+        function handleError(err) {
+            console.log(err.response);
+            console.log("Error1", err.response.status);
+            if (err.response.status == 401) {
+                toastr.error("Access Denied. Redirect to Login page.");
+                window.setTimeout(function () {
+                    window.location = "login";
+                }, 1500);
+                // window.location.href = "login";
+            }
+            else {
+                toastr.error("Error", err.response.data ?.message);
+            }
+        }
         function loadProducts() {
-            // const productSearchAPI = new ProductSearchAPI();
-            // let url = "https://shopping-app-rest-api.herokuapp.com/activeproducts";
+            let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+            let userId = loggedInUser.id;
+            let url = "/api/orders?loggedInUserId=" + userId;
 
-            // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
-            // let userId = loggedInUser.id;
-            // let userId = 1;
-            // let url = "http://localhost:3000/api/orders";
-            let url = "/api/orders";
+            // let url = "/api/orders";
             axios.get(url).then(response => {
                 // console.table(response.data);
                 displayProducts(response.data);
+            }, err => {
+                handleError(err);
+            }).catch(err => {
+                console.log("Error", err);
+                handleError(err);
             });
         }
 
@@ -165,13 +181,6 @@
         let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
         loadProducts();
 
-        if (loggedInUser.role == "ADMIN") {
-        } else {
-            toastr.error("You Are Not Authorized");
-            window.setTimeout(function () {
-                window.location = "products";
-            }, 1500);
-        }
 
         function orderCancel(id) {
             console.log("Cancel order id", id);

@@ -30,6 +30,8 @@
 
 </table>
 <script>
+    loadProducts();
+
     function loadProducts() {
         // const productSearchAPI = new ProductSearchAPI();
         // let url = "https://shopping-app-rest-api.herokuapp.com/activeproducts ";
@@ -40,11 +42,33 @@
         // let url = "http://localhost:3000/api/getAllProducts ";
         // getProgressProductCount()
         let url = "/api/getAllProducts?loggedInUserId=" + userId;
+        // let url = "/api/getAllProducts";
+
         axios.get(url).then(response => {
             // console.table(response.data);
             displayProducts(response.data);
+        }, err => {
+            handleError(err);
+        }).catch(err => {
+            console.log("Error", err);
+            handleError(err);
         });
     }
+
+    function handleError(err) {
+        console.log(err.response);
+        console.log("Error1", err.response.status);
+        if (err.response.status == 401) {
+            toastr.error("Access Denied. Redirect to Login page.");
+            window.setTimeout(function () {
+                window.location.href = "login";
+            }, 1500);
+        }
+        else {
+            toastr.error("Error", err.response.data.message);
+        }
+    }
+
 
     function getProgressProductCount() {
         // let url = "http://localhost:3000/api/getProgressProductsCount";
@@ -191,16 +215,6 @@
 
     }
 
-    let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
-
-    try {
-        loadProducts();
-    } catch (err) {
-        toastr.error("You Are Not Authorized");
-        window.setTimeout(function () {
-            window.location = "products";
-        }, 1500);
-    }
     $("#header ").load("_header.html ");
 
 </script>

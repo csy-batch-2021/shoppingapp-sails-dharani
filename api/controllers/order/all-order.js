@@ -1,6 +1,8 @@
 
 const OrderService = require("../../services/orderService");
 module.exports = async function allOrders(req, res) {
+    console.log(req.me);
+
     try {
         let orders = await OrderService.getAllOrder();
         const allOrdersList = orders.sort(
