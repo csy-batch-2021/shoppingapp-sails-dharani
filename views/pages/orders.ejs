@@ -162,16 +162,16 @@
             }
 
         }
-        // let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
+        let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
         loadProducts();
 
-        // if (loggedInUser.role == "ADMIN") {
-        // } else {
-        //     toastr.error("You Are Not Authorized");
-        //     window.setTimeout(function () {
-        //         window.location = "products.html";
-        //     }, 1500);
-        // }
+        if (loggedInUser.role == "ADMIN") {
+        } else {
+            toastr.error("You Are Not Authorized");
+            window.setTimeout(function () {
+                window.location = "products.html";
+            }, 1500);
+        }
 
         function orderCancel(id) {
             console.log("Cancel order id", id);
