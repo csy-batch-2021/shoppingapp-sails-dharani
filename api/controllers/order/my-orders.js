@@ -6,8 +6,9 @@ module.exports = async function myOrders(req, res) {
         OrderValidator.isValidNumber(userId, "Please Enter Valid User ID");
         let myOrders = await OrderService.getMyOrder(userId);
         const myOrdersList = myOrders.sort(
-            (a, b) => b.created_date - a.created_date
+            (a, b) => new Date(b.created_date) - new Date(a.created_date)
         );
+
         res.json(myOrdersList);
     } catch (err) {
         res.status(404).json({ message: err.message });

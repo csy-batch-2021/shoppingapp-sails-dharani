@@ -16,7 +16,7 @@
             <th>Product Name</th>
             <th>Brand Name</th>
             <th>RAM</th>
-            <th>Rating</th>
+            <!-- <th>Rating</th> -->
             <th>Price</th>
             <th>Status</th>
             <th>Action</th>
@@ -84,7 +84,6 @@
     <td>${p.name}</td>
     <td>${p.brand_name}</td>
     <td>${p.ram}</td>
-    <td>${p.rating != null ? p.rating : ""}</td>
     <td>Rs.${p.price}</td><td>`
                 if (p.active == 0) {
                     temp += `<button  type = "button" onClick="changeStatus(${p.id},true)" id="product-btn1" class="btn btn-success" data-product-id=${p.id}>Enable</button>`

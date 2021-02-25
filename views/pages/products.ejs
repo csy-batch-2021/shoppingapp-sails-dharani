@@ -54,9 +54,10 @@
 
         function displayFilter(products) {
             let brandNames = products.map(p => p.brand_name);
+            let uniqueBrandNames = _.uniq(brandNames);
 
             let brandNameStr = "";
-            for (let brand of brandNames) {
+            for (let brand of uniqueBrandNames) {
                 brandNameStr += ` <input type="checkbox" id="brandNames" name="brandNames" value=${brand}> ${brand} <br/>`;
 
             }
