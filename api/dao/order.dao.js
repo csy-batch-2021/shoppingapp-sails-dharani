@@ -51,6 +51,18 @@ class OrderDAO {
         return data;
     }
 
+    /**
+     * Check if product is ordered in orders table
+     * @param {*} productId 
+     */
+    static async isProductOrdered(productId) {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery("select 1 from orders where product_id=$1", [productId]);
+        let data = result.rows;
+        let exists = data.length > 0;
+        return exists;
+    }
+
     static async cancelOrder(orderDetails) {
         let params = ["CANCELLED", orderDetails.userId, orderDetails.orderId];
         const sql =
@@ -90,6 +102,7 @@ module.exports = {
     cancelOrder: OrderDAO.cancelOrder,
     findMyOrder: OrderDAO.findMyOrder,
     myOrdersStatusCount: OrderDAO.myOrdersStatusCount,
-    findProductId: OrderDAO.findProductId
+    findProductId: OrderDAO.findProductId,
+    isProductOrdered: OrderDAO.isProductOrdered
 
 }

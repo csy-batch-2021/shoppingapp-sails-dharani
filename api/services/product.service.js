@@ -3,6 +3,7 @@ const Products = require("../models/Products");
 const UserValidator = require("../validator/userValidator");
 const ProductValidator = require("../validator/productValidator");
 const ProductRatingDAO = require("../dao/productRating.dao");
+const UserDAO = require("../dao/user.dao");
 class ProductService {
     static async getAllProducts() {
         try {
@@ -74,8 +75,70 @@ class ProductService {
     }
     static async deleteProduct(productId) {
         try {
-            await ProductValidator.toCheckOrderedProduct(productId);
-            let productResult = await ProductDAO.deleteProduct(productId);
+            let isProductOrdered = await ProductValidator.toCheckOrderedProduct(productId);
+            if (isProductOrdered) {
+                let active = false;
+                //disable product (active =0)
+                await ProductDAO.updateProductStatus(productId, active);
+            }
+            else {
+                let productResult = await ProductDAO.deleteProduct(productId);
+            }
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+
+    // to add a new product
+    static async addProducts(product) {
+        try {
+            await UserValidator.toCheckValidUserId(product.userId);
+            var userResult = await UserDAO.findOne(product.userId);
+
+            console.log("userResult", userResult.role);
+            if (userResult.role == "ADMIN") {
+
+                ProductValidator.validateNewProduct(product); //to check validate the products details
+                let exists = await ProductDAO.findOneUsingName(product); //to find and if same product and brandname product is there in db
+
+                if (exists) {
+                    throw new Error("This Product already Exists in the given brand");
+                }
+                product.created_date = new Date();
+                product.modified_date = new Date();
+                product.created_by = product.userId;
+                product.modified_by = product.userId;
+                return await ProductDAO.save(product);
+            } else {
+                throw new Error("You Are Not Authorized");
+            }
+        } catch (err) {
+            console.log(err.message);
+            throw err;
+        }
+    }
+
+
+    // too change the product status active and inactive
+    static async changeStatus(productId, status) {
+        try {
+            var result = await ProductDAO.findOne(productId);
+            console.log(result);
+
+            if (result) {
+                let isActive = result.active == 1;
+                if (status == isActive) {
+                    throw new Error(
+                        "Already record is " + (isActive ? "Active" : "Inactive")
+                    );
+                }
+                await ProductDAO.updateProductStatus(result.id, !result.active);
+
+            } else {
+                throw new Error("Please Enter valid Product ID");
+            }
         } catch (err) {
             console.log(err);
             throw err;
@@ -90,5 +153,7 @@ module.exports = {
     getActiveProduct: ProductService.getActiveProduct,
     addProductRating: ProductService.addProductRating,
     updateProduct: ProductService.updateProduct,
-    deleteProduct: ProductService.deleteProduct
+    deleteProduct: ProductService.deleteProduct,
+    changeStatus: ProductService.changeStatus,
+    addProducts: ProductService.addProducts
 }
