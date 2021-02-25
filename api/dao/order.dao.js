@@ -91,6 +91,12 @@ class OrderDAO {
         let data = result.rows;
         return data;
     }
+    static async userOrderReport() {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery("select  *,count(*)as countValues,sum(o.total_amount)as total from orders o,users u ,products p where  p.id=o.product_id and u.id=o.user_id group by o.user_id");
+        let data = result.rows;
+        return data;
+    }
 
 }
 
@@ -103,6 +109,7 @@ module.exports = {
     findMyOrder: OrderDAO.findMyOrder,
     myOrdersStatusCount: OrderDAO.myOrdersStatusCount,
     findProductId: OrderDAO.findProductId,
-    isProductOrdered: OrderDAO.isProductOrdered
+    isProductOrdered: OrderDAO.isProductOrdered,
+    userOrderReport: OrderDAO.userOrderReport
 
 }

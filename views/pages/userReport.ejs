@@ -1,0 +1,78 @@
+User Report:
+<br>
+<div id="errorMessage"></div>
+<table border="1" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sno</th>
+            <th>User</th>
+            <th>Count</th>
+            <th>Total Amount</th>
+
+            <!-- <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Ordered On</th>
+            <th>Last Modified On</th>
+            <th>Action</th> -->
+        </tr>
+    </thead>
+    <tbody id="order-tbl">
+
+    </tbody>
+
+
+</table>
+
+<script>
+    function loadProducts() {
+        // let url = "http://localhost:3000/api/orderReport";
+        let url = "https://shopping-app-rest-api.herokuapp.com/api/orderReport";
+
+        axios.get(url).then(response => {
+            // console.table(response.data);
+            displayProducts(response.data);
+        });
+    }
+
+
+
+
+    //Display the product details  in a table
+    function displayProducts(products) {
+
+        const tbody = document.querySelector("#order-tbl");
+        tbody.innerHTML = "";
+        let content = "";
+        let i = 1;
+
+        // console.log("products", products.length);
+        if (products.length != 0) {
+            for (let p of products) {
+
+                let temp = ` <tr>
+        <td>${i}</td>
+        <td>${p.user_name}</td>
+        <td>${p.countValues}</td>
+        <td>${p.total}</td>
+        
+    
+                   </tr >`;
+
+                content += temp;
+                i++;
+            }
+        }
+        else {
+            content = "No Records Found"
+        }
+        // console.log(content);
+        tbody.innerHTML = content;
+    }
+
+    loadProducts();
+
+
+
+</script>
