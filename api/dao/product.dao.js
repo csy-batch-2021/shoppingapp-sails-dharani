@@ -88,6 +88,15 @@ class ProductDAO {
         return data;
     }
 
+
+    static async productReport() {
+        let ds = await sails.getDatastore();
+
+        const result = await ds.sendNativeQuery("select * ,count(*)as count from orders o ,products p  where p.id=o.product_id group by p.id");
+        let data = result.rows;
+        return data;
+    }
+
 }
 
 
@@ -100,6 +109,7 @@ module.exports = {
     deleteProduct: ProductDAO.deleteProduct,
     updateProductStatus: ProductDAO.updateProductStatus,
     findOneUsingName: ProductDAO.findOneUsingName,
-    save: ProductDAO.save
+    save: ProductDAO.save,
+    productReport: ProductDAO.productReport
 
 }

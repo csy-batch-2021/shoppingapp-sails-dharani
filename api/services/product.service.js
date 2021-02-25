@@ -144,6 +144,15 @@ class ProductService {
             throw err;
         }
     }
+    static async productReport() {
+        try {
+            var productResult = await ProductDAO.productReport();
+            return productResult;
+        } catch (err) {
+            throw new Error("Not able to fetch Product Report");
+        }
+
+    }
 
 }
 module.exports = {
@@ -155,5 +164,6 @@ module.exports = {
     updateProduct: ProductService.updateProduct,
     deleteProduct: ProductService.deleteProduct,
     changeStatus: ProductService.changeStatus,
-    addProducts: ProductService.addProducts
+    addProducts: ProductService.addProducts,
+    productReport: ProductService.productReport
 }

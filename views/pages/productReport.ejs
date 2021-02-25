@@ -1,13 +1,13 @@
-User Report:
+Product Report:
 <br>
 <div id="errorMessage"></div>
 <table border="1" class="table table-bordered">
     <thead>
         <tr>
             <th>Sno</th>
-            <th>User</th>
+            <th>Brand</th>
+            <th>Product</th>
             <th>Count</th>
-            <th>Total Amount</th>
 
             <!-- <th>Price</th>
             <th>Quantity</th>
@@ -27,17 +27,14 @@ User Report:
 
 <script>
     function loadProducts() {
-        // let url = "http://localhost:3000/api/orderReport";
-        let url = "/api/report/user";
+        let url = "/api/report/product";
+        // let url = "http://localhost:3000/api/productReport";
 
         axios.get(url).then(response => {
             // console.table(response.data);
             displayProducts(response.data);
         });
     }
-
-
-
 
     //Display the product details  in a table
     function displayProducts(products) {
@@ -53,9 +50,9 @@ User Report:
 
                 let temp = ` <tr>
         <td>${i}</td>
-        <td>${p.user_name}</td>
-        <td>${p.countValues}</td>
-        <td>${p.total}</td>
+        <td>${p.brand_name}</td>
+        <td>${p.name}</td>        
+        <td>${p.count}</td>
         
     
                    </tr >`;
@@ -72,7 +69,5 @@ User Report:
     }
 
     loadProducts();
-
-
 
 </script>
