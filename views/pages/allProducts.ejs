@@ -39,7 +39,7 @@
         // let userId = 1;
         // let url = "http://localhost:3000/api/getAllProducts ";
         // getProgressProductCount()
-        let url = "/api/getAllProducts";
+        let url = "/api/getAllProducts?loggedInUserId=" + userId;
         axios.get(url).then(response => {
             // console.table(response.data);
             displayProducts(response.data);
@@ -193,9 +193,9 @@
 
     let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
 
-    if (loggedInUser.role == "ADMIN") {
+    try {
         loadProducts();
-    } else {
+    } catch (err) {
         toastr.error("You Are Not Authorized");
         window.setTimeout(function () {
             window.location = "products";

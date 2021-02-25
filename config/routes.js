@@ -26,6 +26,8 @@ module.exports.routes = {
   "get /allProducts": { view: "pages/allProducts" },
   "get /myOrders": { view: "pages/myOrders" },
   "get /addProduct": { view: "pages/addProduct" },
+  "get /userReport": { view: "pages/userReport" },
+  
 
 
 

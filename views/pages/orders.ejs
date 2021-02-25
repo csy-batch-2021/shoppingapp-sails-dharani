@@ -27,13 +27,13 @@
     <div class="container-fluid">
         All Orders:
         <br>
-        <a href="userReport.html">
+        <a href="userReport">
             <button>User Report</button>
         </a>
-        <a href="productReport.html">
+        <a href="productReport">
             <button>Product Report</button>
         </a>
-        <a href="statusReport.html">
+        <a href="statusReport">
             <button>Status Report</button>
         </a>
         <br>
@@ -155,8 +155,8 @@
 
                 }).catch(err => {
                     console.error("Erroro", err);
-
-                    document.getElementById("errorMessage").innerHTML = err.response.data.message;
+                    toastr.error("Your Not Authorized")
+                    // document.getElementById("errorMessage").innerHTML = err.response.data.message;
                 });
 
             }
@@ -206,7 +206,6 @@
 
 
 
-        $("#header").load("_header.html");
 
     </script>
 </body>

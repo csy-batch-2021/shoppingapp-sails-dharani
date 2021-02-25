@@ -8,10 +8,26 @@ class UserValidator {
             throw new Error("Please Check User ID");
         }
     }
-    
+
+    static async isAdmin(userId) {
+        var result = await UserDAO.findOne(userId);
+        try {
+            if (result) {
+                if (!result.role == "ADMIN") {
+                    throw new Error("You Are Not Authorized");
+                }
+            } else {
+                throw new Error("Please Enter Valid UserID");
+            }
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+
 }
 
 module.exports = {
-    toCheckValidUserId: UserValidator.toCheckValidUserId
+    toCheckValidUserId: UserValidator.toCheckValidUserId,
+    isAdmin: UserValidator.isAdmin
 
 }
