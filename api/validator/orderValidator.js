@@ -5,7 +5,7 @@ const OrderDAO = require('../dao/order.dao');
 class OrderValidator {
     //to check is number
     static isValidNumber(input, message) {
-        if (input == null || input <= 0) {             // valid = false;
+        if (input == null || input <= 0) {
             throw new Error(message);
         }
     }
