@@ -37,29 +37,24 @@
 
 </table>
 <script>
+    //to load products in page
     function loadProducts() {
         let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
         let userId = loggedInUser.id;
-        // let userId = 1;
-
         getOrderStatusCount(userId);
-        // let url = "http://localhost:3000/api/myorders?userId=" + userId;
         let url = "/api/myorders?userId=" + userId;
-
         axios.get(url).then(response => {
             displayProducts(response.data);
         });
     }
-
-
+    // get ordered status count
     function getOrderStatusCount(userId) {
         let url = "/api/orderStatusCount?userId=" + userId;
         axios.get(url).then(response => {
             displayOrderStatusCount(response.data);
         });
-
     }
-
+    //display the ordered status count
     function displayOrderStatusCount(orderDetails) {
         let map = {};
         orderDetails.forEach(o => {

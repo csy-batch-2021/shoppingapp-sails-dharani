@@ -5,7 +5,7 @@ const OrderDAO = require('../dao/order.dao');
 class OrderValidator {
     //to check is number
     static isValidNumber(input, message) {
-        if (input == null || input <= 0) {
+        if (input === null || input <= 0) {
             throw new Error(message);
         }
     }
@@ -19,9 +19,9 @@ class OrderValidator {
     static async isValidId(orderDetails) {
         var userResult = await UserDAO.findOne(orderDetails.userId);
         var productResult = await ProductDAO.findOne(orderDetails.productId);
-        if (userResult == null) {
+        if (userResult === null) {
             throw new Error('Please Check UserID');
-        } else if (productResult == null) {
+        } else if (productResult === null) {
             throw new Error('Please Check ProductID');
         }
     }
@@ -34,9 +34,9 @@ class OrderValidator {
             throw new Error('Please Entered Valid OrderId');
         } else if (!statusCheck) {
             throw new Error('Please Enter Valid Status');
-        } else if (result.status == 'DELIVERED') {
+        } else if (result.status === 'DELIVERED') {
             throw new Error('Delivered Product cannot be Delivered');
-        } else if (result.status == 'CANCELLED') {
+        } else if (result.status === 'CANCELLED') {
             throw new Error('Already Order Product has been Cancelled');
         }
     }
@@ -45,9 +45,9 @@ class OrderValidator {
         var result = await OrderDAO.findOne(orderId);
         if (!result) {
             throw new Error('Please Entered Valid OrderId');
-        } else if (result.status == 'DELIVERED') {
+        } else if (result.status === 'DELIVERED') {
             throw new Error('Delivered Product cannot be cancelled');
-        } else if (result.status == 'CANCELLED') {
+        } else if (result.status === 'CANCELLED') {
             throw new Error('Already Order Product has been Cancelled');
         }
     }

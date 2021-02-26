@@ -90,7 +90,7 @@ class ProductService {
         try {
             await UserValidator.toCheckValidUserId(product.userId);
             var userResult = await UserDAO.findOne(product.userId);
-            if (userResult.role == 'ADMIN') {
+            if (userResult.role === 'ADMIN') {
                 ProductValidator.validateNewProduct(product); //to check validate the products details
                 let exists = await ProductDAO.findOneUsingName(product); //to find and if same product and brandname product is there in db
                 if (exists) {
@@ -115,8 +115,8 @@ class ProductService {
             var result = await ProductDAO.findOne(productId);
             console.log(result);
             if (result) {
-                let isActive = result.active == 1;
-                if (status == isActive) {
+                let isActive = result.active === 1;
+                if (status === isActive) {
                     throw new Error(
                         'Already record is ' + (isActive ? 'Active' : 'Inactive')
                     );

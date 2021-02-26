@@ -203,7 +203,7 @@
                 //     displayProducts(response);
                 // }
                 axios.get(url).then(response => {
-                    // console.table(response.data);
+                    console.table(response.data);
                     displayProducts(response.data);
 
                 }).catch(err => {
