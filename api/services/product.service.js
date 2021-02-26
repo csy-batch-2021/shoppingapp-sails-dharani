@@ -27,6 +27,7 @@ class ProductService {
             throw err;
         }
     }
+    // search the products to using filter
     static async searchProducts(brandNames) {
         try {
             return await ProductDAO.searchProducts(brandNames);

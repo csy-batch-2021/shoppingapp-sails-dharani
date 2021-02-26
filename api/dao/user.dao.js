@@ -1,4 +1,5 @@
 class UserDAO {
+    // get one user based on id
     static async findOne(id) {
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery('SELECT * FROM users where id=$1', [id]);

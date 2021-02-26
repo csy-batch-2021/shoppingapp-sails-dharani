@@ -1,5 +1,6 @@
 
 class ProductRatingDAO {
+    // to add product rating
     static async save(productRatingsDetails) {
         let params = [
             productRatingsDetails.userId,
