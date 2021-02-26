@@ -13,6 +13,6 @@ module.exports = async function myOrders(req, res) {
         res.json(myOrdersList);
     } catch (err) {
         console.log(err);
-        res.status(404).json({ message: err.message });
+        res.status(400).json({ message: err.message });
     }
 }

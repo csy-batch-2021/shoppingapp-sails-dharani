@@ -56,6 +56,7 @@ class OrderService {
             throw err;
         }
     }
+
     // to find by order based on user id
     static async getMyOrder(userId) {
         return await OrderDAO.findMyOrder(userId);

@@ -8,6 +8,6 @@ module.exports = async function cancelOrder(req, res) {
         res.json(order);
     } catch (err) {
         console.log(err);
-        res.status(404).json({ message: err.message });
+        res.status(400).json({ message: err.message });
     }
 }

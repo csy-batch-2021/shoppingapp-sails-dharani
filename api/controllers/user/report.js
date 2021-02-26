@@ -7,6 +7,6 @@ module.exports =
             res.json(orderReport);
         } catch (err) {
             console.log(err);
-            res.status(404).json({ message: err.message });
+            res.status(400).json({ message: err.message });
         }
     }
