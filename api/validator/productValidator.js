@@ -11,7 +11,11 @@ class ProductValidator {
     }
     // to check product is ordered
     static async toCheckOrderedProduct(productId) {
-        return await OrderDAO.isProductOrdered(productId);
+        try {
+            return await OrderDAO.isProductOrdered(productId);
+        } catch (err) {
+            throw new Error('Not able to fetch the orders');
+        }
     }
     // to check product is exist and check validation for new product 
     static validateNewProduct(product) {

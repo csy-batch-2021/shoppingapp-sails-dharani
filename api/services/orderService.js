@@ -59,7 +59,11 @@ class OrderService {
 
     // to find by order based on user id
     static async getMyOrder(userId) {
-        return await OrderDAO.findMyOrder(userId);
+        try {
+            return await OrderDAO.findMyOrder(userId);
+        } catch (err) {
+            throw new Error('Not able to fetch the orders');
+        }
     }
     // to get my order counts
     static async myOrderStatusCount(userId) {
