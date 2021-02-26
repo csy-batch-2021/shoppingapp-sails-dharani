@@ -1,16 +1,17 @@
-const ProductDAO = require("../dao/product.dao");
-const Products = require("../models/Products");
-const UserValidator = require("../validator/userValidator");
-const ProductValidator = require("../validator/productValidator");
-const ProductRatingDAO = require("../dao/productRating.dao");
-const UserDAO = require("../dao/user.dao");
+const ProductDAO = require('../dao/product.dao');
+const Products = require('../models/Products');
+const UserValidator = require('../validator/userValidator');
+const ProductValidator = require('../validator/productValidator');
+const ProductRatingDAO = require('../dao/productRating.dao');
+const UserDAO = require('../dao/user.dao');
 class ProductService {
+    // to get All Products 
     static async getAllProducts() {
         try {
             return await ProductDAO.getAllProducts();
         } catch (err) {
             console.log(err);
-            throw new Error("Not able to fetch the products");
+            throw new Error('Not able to fetch the products');
         }
     }
     // to find and get particular order
@@ -18,7 +19,7 @@ class ProductService {
         try {
             var result = await ProductDAO.findOne(productId);
             if (!result) {
-                throw new Error("Please enter valid Prodct Id");
+                throw new Error('Please enter valid Prodct Id');
             }
             return result;
         } catch (err) {
@@ -26,14 +27,12 @@ class ProductService {
             throw err;
         }
     }
-
     static async searchProducts(brandNames) {
         try {
             return await ProductDAO.searchProducts(brandNames);
-
         } catch (err) {
             console.log(err);
-            throw new Error("Not able to fetch the products");
+            throw new Error('Not able to fetch the products');
         }
     }
     // to get all products
@@ -42,9 +41,10 @@ class ProductService {
             return await ProductDAO.findActive();
 
         } catch (err) {
-            throw new Error("Not able to fetch active products");
+            throw new Error('Not able to fetch active products');
         }
     }
+    // to add rating for products
     static async addProductRating(productRatingDetails) {
         try {
             await UserValidator.toCheckValidUserId(productRatingDetails.userId);
@@ -59,6 +59,7 @@ class ProductService {
             throw err;
         }
     }
+    // to update product price
     static async updateProduct(productValues) {
         try {
             await ProductValidator.toCheckValidProductId(productValues.productId);
@@ -68,6 +69,7 @@ class ProductService {
             throw err;
         }
     }
+    // to change product status inActive
     static async deleteProduct(productId) {
         try {
             let isProductOrdered = await ProductValidator.toCheckOrderedProduct(productId);
@@ -83,22 +85,16 @@ class ProductService {
             throw err;
         }
     }
-
-
     // to add a new product
     static async addProducts(product) {
         try {
             await UserValidator.toCheckValidUserId(product.userId);
             var userResult = await UserDAO.findOne(product.userId);
-
-            console.log("userResult", userResult.role);
-            if (userResult.role == "ADMIN") {
-
+            if (userResult.role == 'ADMIN') {
                 ProductValidator.validateNewProduct(product); //to check validate the products details
                 let exists = await ProductDAO.findOneUsingName(product); //to find and if same product and brandname product is there in db
-
                 if (exists) {
-                    throw new Error("This Product already Exists in the given brand");
+                    throw new Error('This Product already Exists in the given brand');
                 }
                 product.created_date = new Date();
                 product.modified_date = new Date();
@@ -106,47 +102,42 @@ class ProductService {
                 product.modified_by = product.userId;
                 return await ProductDAO.save(product);
             } else {
-                throw new Error("You Are Not Authorized");
+                throw new Error('You Are Not Authorized');
             }
         } catch (err) {
             console.log(err.message);
             throw err;
         }
     }
-
-
     // too change the product status active and inactive
     static async changeStatus(productId, status) {
         try {
             var result = await ProductDAO.findOne(productId);
             console.log(result);
-
             if (result) {
                 let isActive = result.active == 1;
                 if (status == isActive) {
                     throw new Error(
-                        "Already record is " + (isActive ? "Active" : "Inactive")
+                        'Already record is ' + (isActive ? 'Active' : 'Inactive')
                     );
                 }
                 await ProductDAO.updateProductStatus(result.id, !result.active);
-
             } else {
-                throw new Error("Please Enter valid Product ID");
+                throw new Error('Please Enter valid Product ID');
             }
         } catch (err) {
             console.log(err);
             throw err;
         }
     }
+    //to count the ordered product 
     static async productReport() {
         try {
             return await ProductDAO.productReport();
         } catch (err) {
-            throw new Error("Not able to fetch Product Report");
+            throw new Error('Not able to fetch Product Report');
         }
-
     }
-
 }
 module.exports = {
     getAllProducts: ProductService.getAllProducts,

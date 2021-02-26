@@ -10,13 +10,11 @@ class ProductRatingDAO {
         ];
         let ds = await sails.getDatastore();
         const sql =
-            "insert into product_ratings(user_id,product_id,rating,created_by,modified_by) values($1,$2,$3,$4,$5)";
+            'INSERT INTO product_ratings(user_id,product_id,rating,created_by,modified_by) VALUES($1,$2,$3,$4,$5)';
         const result = await ds.sendNativeQuery(sql, params);
         return result.rows;
-
     }
 }
-
 module.exports = {
     save: ProductRatingDAO.save
 }

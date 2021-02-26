@@ -1,6 +1,6 @@
-const UserValidator = require("../validator/userValidator");
-
+const UserValidator = require('../validator/userValidator');
 module.exports = async function (req, res, proceed) {
+    console.log(req.query);
     let loggedInUserId = req.query.loggedInUserId;
     if (loggedInUserId) {
         try {
@@ -12,7 +12,6 @@ module.exports = async function (req, res, proceed) {
             res.status(401).json({ message: err.message });
         }
     } else {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(401).json({ message: 'Unauthorized' });
     }
-
 };

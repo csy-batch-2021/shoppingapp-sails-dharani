@@ -1,7 +1,8 @@
-const ProductService = require("../../services/product.service");
+const ProductService = require('../../services/product.service');
 
 module.exports = async function addProductRating(req, res) {
     try {
+        console.log(req.body);
         let productsRating = await ProductService.addProductRating(req.body);
         res.json(productsRating);
     } catch (err) {

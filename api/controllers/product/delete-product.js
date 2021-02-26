@@ -1,5 +1,6 @@
-const ProductService = require("../../services/product.service");
+const ProductService = require('../../services/product.service');
 module.exports = async function deleteProduct(req, res) {
+    console.log(req.params);
     let productId = req.params.productId;
     try {
         let result = await ProductService.deleteProduct(productId);

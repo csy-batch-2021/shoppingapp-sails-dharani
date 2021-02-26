@@ -9,14 +9,14 @@
  */
 
 module.exports.policies = {
-  "product/list": "isLoggedin",
-  // "user/login": true,
+  'product/list': 'isLoggedin',
+  // 'user/login': true,
 
-  "order/all-order": "isAdmin",
-  "product/get-all-products": "isAdmin",
-  "product/add-new-product": "isAdmin",
-  // "order/all-order": "isAdmin",
-  // "product/get-all-products": "isAdmin",
+  'order/all-order': 'isAdmin',
+  'product/get-all-products': 'isAdmin',
+  'product/add-new-product': 'isAdmin',
+  // 'order/all-order': 'isAdmin',
+  // 'product/get-all-products': 'isAdmin',
 
 
   /***************************************************************************
