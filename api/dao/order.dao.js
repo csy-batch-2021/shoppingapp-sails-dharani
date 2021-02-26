@@ -97,6 +97,12 @@ class OrderDAO {
         let data = result.rows;
         return data;
     }
+    static async orderStatusReport() {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery("select  status,count(*)as count from orders group by status");
+        let data = result.rows;
+        return data;
+    }
 
 }
 
@@ -110,6 +116,7 @@ module.exports = {
     myOrdersStatusCount: OrderDAO.myOrdersStatusCount,
     findProductId: OrderDAO.findProductId,
     isProductOrdered: OrderDAO.isProductOrdered,
-    userOrderReport: OrderDAO.userOrderReport
+    userOrderReport: OrderDAO.userOrderReport,
+    orderStatusReport: OrderDAO.orderStatusReport
 
 }

@@ -95,6 +95,17 @@ class OrderService {
             throw new Error("Not able to fetch the Report");
         }
     }
+
+
+    static async orderStatusReport() {
+        try {
+            let reportValues = await OrderDAO.orderStatusReport();
+            // console.log("reportValues", reportValues);
+            return reportValues;
+        } catch (err) {
+            throw new Error("Not able to fetch the Report");
+        }
+    }
 }
 
 module.exports = {
@@ -104,5 +115,6 @@ module.exports = {
     cancelOrder: OrderService.cancelOrder,
     getMyOrder: OrderService.getMyOrder,
     myOrderStatusCount: OrderService.myOrderStatusCount,
-    userOrderReport: OrderService.userOrderReport
+    userOrderReport: OrderService.userOrderReport,
+    orderStatusReport: OrderService.orderStatusReport
 }

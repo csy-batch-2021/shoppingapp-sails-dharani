@@ -28,6 +28,8 @@ module.exports.routes = {
   "get /addProduct": { view: "pages/addProduct" },
   "get /userReport": { view: "pages/userReport" },
   "get /productReport": { view: "pages/productReport" },
+  "get /statusReport": { view: "pages/statusReport" },
+  
 
 
 
@@ -51,7 +53,8 @@ module.exports.routes = {
   "PATCH /api/product/changeStatus": { action: "product/change-product-status" },
   "POST /api/product/addNew": { action: "product/add-new-product" },
   "GET /api/report/user": { action: "user/report" },
-  "GET /api/report/product": { action: "product/report" }
+  "GET /api/report/product": { action: "product/report" },
+  "GET /api/report/orderedStatus": { action: "order/status-report" },
 
 
 
