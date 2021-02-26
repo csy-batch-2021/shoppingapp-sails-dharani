@@ -21,10 +21,10 @@ class OrderService {
             orderDetails.modified_date = new Date();
             orderDetails.created_by = orderDetails.userId;
             orderDetails.modified_by = orderDetails.userId;
-            // await OrderValidator.toCheckWalletBalance(orderDetails);
             await OrderDAO.save(orderDetails);
             return "Product Ordered sucessfully";
         } catch (err) {
+            console.log(err);
             throw err;
         }
     }
@@ -32,8 +32,7 @@ class OrderService {
     //get all orders
     static async getAllOrder() {
         try {
-            let orders = await OrderDAO.findAll();
-            return orders;
+            return await OrderDAO.findAll();
         } catch (err) {
             throw new Error("Not able to fetch the orders");
         }
@@ -42,11 +41,9 @@ class OrderService {
     // to change order status delivered
     static async changeOrderStatus(orderId, userId, status) {
         try {
-            // await OrderValidator.statusValidCheck(orderId, status);
             await OrderValidator.isValidForDelivery(orderId, status);
-            // await OrderValidator.toCheckValidOrderId(orderId);
-            var result = await OrderDAO.findOneAndUpdate(orderId, status, userId);
-            return result;
+
+            return await OrderDAO.findOneAndUpdate(orderId, status, userId);
         } catch (err) {
             console.log(err.message);
             throw err;
@@ -60,10 +57,8 @@ class OrderService {
             let userId = orderDetails.userId;
             let orderId = orderDetails.orderId;
             await UserValidator.toCheckValidUserId(userId);
-            // // await OrderValidator.isValidCheck(orderId);
             await OrderValidator.isExistOrderId(orderId);
             var result = await OrderDAO.cancelOrder(orderDetails);
-            // await OrderValidator.walletBalanceRefund(orderDetails);
             console.log(result);
             return "Your Amount Has Successfully Refunded To Your Wallet"
         } catch (err) {
@@ -73,24 +68,19 @@ class OrderService {
     }
     // to find by order based on user id
     static async getMyOrder(userId) {
-        let myOrder = await OrderDAO.findMyOrder(userId);
-        return myOrder;
-        // console.log(myOrder);
+        return await OrderDAO.findMyOrder(userId);
     }
 
     static async myOrderStatusCount(userId) {
         try {
-            let orderValues = await OrderDAO.myOrdersStatusCount(userId);
-            return orderValues;
+            return await OrderDAO.myOrdersStatusCount(userId);
         } catch (err) {
             throw new Error("Not able to fetch the orders");
         }
     }
     static async userOrderReport() {
         try {
-            let reportValues = await OrderDAO.userOrderReport();
-            // console.log("reportValues", reportValues);
-            return reportValues;
+            return await OrderDAO.userOrderReport();
         } catch (err) {
             throw new Error("Not able to fetch the Report");
         }
@@ -99,9 +89,7 @@ class OrderService {
 
     static async orderStatusReport() {
         try {
-            let reportValues = await OrderDAO.orderStatusReport();
-            // console.log("reportValues", reportValues);
-            return reportValues;
+            return await OrderDAO.orderStatusReport();
         } catch (err) {
             throw new Error("Not able to fetch the Report");
         }

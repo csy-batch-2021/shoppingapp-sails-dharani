@@ -40,15 +40,13 @@ class OrderDAO {
 
         const result = await ds.sendNativeQuery("select * from orders where id=$1", [id]);
         let data = result.rows;
-        let order = data.length > 0 ? data[0] : null;
-        return order;
+        return data.length > 0 ? data[0] : null;
+
     }
     static async findProductId(productId) {
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery("select * from orders where product_id=$1", [productId]);
-        let data = result.rows;
-        // let order = data.length > 0 ? data[0] : null;
-        return data;
+        return result.rows;
     }
 
     /**
@@ -59,8 +57,7 @@ class OrderDAO {
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery("select 1 from orders where product_id=$1", [productId]);
         let data = result.rows;
-        let exists = data.length > 0;
-        return exists;
+        return data.length > 0;
     }
 
     static async cancelOrder(orderDetails) {
@@ -69,9 +66,7 @@ class OrderDAO {
             "UPDATE orders SET status=$1,modified_by=$2,modified_date=now() where id=$3";
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery(sql, params);
-        let data = result.rows;
-
-        return data;
+        return result.rows;
     }
 
     static async findMyOrder(userId) {
@@ -88,20 +83,18 @@ class OrderDAO {
             "select status,count(*) as count from users u, products p,orders o where o.user_id=u.id AND o.product_id=p.id AND o.user_id=$1 group by status",
             [userId]
         );
-        let data = result.rows;
-        return data;
+        return result.rows;
     }
     static async userOrderReport() {
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery("select  *,count(*)as countValues,sum(o.total_amount)as total from orders o,users u ,products p where  p.id=o.product_id and u.id=o.user_id group by o.user_id");
-        let data = result.rows;
-        return data;
+        return result.rows;
+
     }
     static async orderStatusReport() {
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery("select  status,count(*)as count from orders group by status");
-        let data = result.rows;
-        return data;
+        return result.rows;
     }
 
 }

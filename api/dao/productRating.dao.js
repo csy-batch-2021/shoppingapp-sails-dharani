@@ -12,8 +12,8 @@ class ProductRatingDAO {
         const sql =
             "insert into product_ratings(user_id,product_id,rating,created_by,modified_by) values($1,$2,$3,$4,$5)";
         const result = await ds.sendNativeQuery(sql, params);
-        let data = result.rows;
-        return data;
+        return result.rows;
+
     }
 }
 

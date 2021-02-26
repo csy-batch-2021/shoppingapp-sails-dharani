@@ -7,8 +7,7 @@ const UserDAO = require("../dao/user.dao");
 class ProductService {
     static async getAllProducts() {
         try {
-            let products = await ProductDAO.getAllProducts();
-            return products;
+            return await ProductDAO.getAllProducts();
         } catch (err) {
             console.log(err);
             throw new Error("Not able to fetch the products");
@@ -30,8 +29,8 @@ class ProductService {
 
     static async searchProducts(brandNames) {
         try {
-            let products = await ProductDAO.searchProducts(brandNames);
-            return products;
+            return await ProductDAO.searchProducts(brandNames);
+
         } catch (err) {
             console.log(err);
             throw new Error("Not able to fetch the products");
@@ -40,15 +39,13 @@ class ProductService {
     // to get all products
     static async getActiveProduct(params) {
         try {
-            var activeProduct = await ProductDAO.findActive();
-            return activeProduct;
+            return await ProductDAO.findActive();
+
         } catch (err) {
             throw new Error("Not able to fetch active products");
         }
     }
     static async addProductRating(productRatingDetails) {
-        console.log("productRatingDetails", productRatingDetails);
-
         try {
             await UserValidator.toCheckValidUserId(productRatingDetails.userId);
             await ProductValidator.toCheckValidProductId(
@@ -56,9 +53,7 @@ class ProductService {
             );
             productRatingDetails.created_by = productRatingDetails.userId;
             productRatingDetails.modified_by = productRatingDetails.userId;
-            // productRatingsDetails.
-            let result = await ProductRatingDAO.save(productRatingDetails);
-            return result;
+            return await ProductRatingDAO.save(productRatingDetails);
         } catch (err) {
             console.log(err);
             throw err;
@@ -67,7 +62,7 @@ class ProductService {
     static async updateProduct(productValues) {
         try {
             await ProductValidator.toCheckValidProductId(productValues.productId);
-            var result = await ProductDAO.findOneAndUpdate(productValues);
+            await ProductDAO.findOneAndUpdate(productValues);
         } catch (err) {
             console.log(err);
             throw err;
@@ -78,11 +73,10 @@ class ProductService {
             let isProductOrdered = await ProductValidator.toCheckOrderedProduct(productId);
             if (isProductOrdered) {
                 let active = false;
-                //disable product (active =0)
-                await ProductDAO.updateProductStatus(productId, active);
+                await ProductDAO.updateProductStatus(productId, active);  //disable product (active =0)         
             }
             else {
-                let productResult = await ProductDAO.deleteProduct(productId);
+                await ProductDAO.deleteProduct(productId);
             }
         } catch (err) {
             console.log(err);
@@ -146,8 +140,7 @@ class ProductService {
     }
     static async productReport() {
         try {
-            var productResult = await ProductDAO.productReport();
-            return productResult;
+            return await ProductDAO.productReport();
         } catch (err) {
             throw new Error("Not able to fetch Product Report");
         }

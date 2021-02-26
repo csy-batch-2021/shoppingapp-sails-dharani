@@ -4,12 +4,9 @@ const ProductDAO = require("../dao/product.dao");
 const OrderDAO = require("../dao/order.dao");
 class OrderValidator {
     static isValidNumber(input, message) {
-        let valid = true;
-        if (input == null || input <= 0) {
-            // valid = false;
+        if (input == null || input <= 0) {             // valid = false;
             throw new Error(message);
         }
-        // return valid;
     }
     static async validCheck(orderDetails) {
         this.isValidNumber(orderDetails.userId, "Please Enter Valid User ID");
@@ -41,7 +38,6 @@ class OrderValidator {
         }
     }
     static async isExistOrderId(orderId) {
-        // console.log("orderId", orderId);
         var result = await OrderDAO.findOne(orderId);
         if (!result) {
             throw new Error("Please Entered Valid OrderId");
