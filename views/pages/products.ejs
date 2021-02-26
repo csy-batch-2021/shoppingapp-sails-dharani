@@ -191,23 +191,27 @@
         }
 
         function filterProducts(filterObj) {
-            let brandName = filterObj.brandName.join(",");
-            console.log("filterObj", brandName);
+            if (filterObj.brandName.length != 0) {
+                let brandName = filterObj.brandName.join(",");
+                console.log("filterObj", brandName);
 
 
-            let url = "/api/product/search?brandName=" + brandName;
-            // let url = "https://shopping-app-rest-api.herokuapp.com/api/searchProducts";
-            // productSearchAPI.searchProducts(filterObj).then(response => {
-            //     console.table(response);
-            //     displayProducts(response);
-            // }
-            axios.get(url).then(response => {
-                // console.table(response.data);
-                displayProducts(response.data);
+                let url = "/api/product/search?brandName=" + brandName;
+                // let url = "https://shopping-app-rest-api.herokuapp.com/api/searchProducts";
+                // productSearchAPI.searchProducts(filterObj).then(response => {
+                //     console.table(response);
+                //     displayProducts(response);
+                // }
+                axios.get(url).then(response => {
+                    // console.table(response.data);
+                    displayProducts(response.data);
 
-            }).catch(err => {
-                console.error(err);
-            });
+                }).catch(err => {
+                    console.error(err);
+                });
+            } else {
+                loadProducts();
+            }
         }
 
         function searchProducts() {

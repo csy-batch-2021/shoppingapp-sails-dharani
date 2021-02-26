@@ -117,9 +117,12 @@
                 }
 
 
-                temp = temp + `</td>`
-                temp += ` <td><button type="button" onclick="ratingPrompt(${p.product_id})"  id="rating-btn1" data-product-id=${p.product_id}> Rating</button> </td> </tr>`;
+                temp = temp + `</td>
+                     <td>`
+                if (p.status != "CANCELLED") {
 
+                    temp += `<button type="button" onclick="ratingPrompt(${p.product_id})"  id="rating-btn1" data-product-id=${p.product_id}> Rating</button> </td> </tr>`;
+                }
                 content += temp;
                 i++;
             }
@@ -213,7 +216,7 @@
             else {
                 toastr.error("please Enter Valid Rating (1 to 5)");
             }
-        } 
+        }
         // else {
         //     toastr.error("please Enter Valid Rating (1 to 5)");
         // }
