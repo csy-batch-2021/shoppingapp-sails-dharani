@@ -4,7 +4,7 @@ module.exports = async function deleteProduct(req, res) {
     let productId = req.params.productId;
     try {
         let result = await ProductService.deleteProduct(productId);
-        console.log("Product Result", result);
+        console.log('Product Result', result);
         res.json(result);
     } catch (err) {
         console.log(err);
