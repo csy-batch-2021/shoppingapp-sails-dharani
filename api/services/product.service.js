@@ -49,6 +49,7 @@ class ProductService {
     static async addProductRating(productRatingDetails) {
         try {
             await UserValidator.toCheckValidUserId(productRatingDetails.userId);
+            await ProductValidator.isProductRated(productRatingDetails.productId, productRatingDetails.userId);
             await ProductValidator.toCheckValidProductId(
                 productRatingDetails.productId
             );

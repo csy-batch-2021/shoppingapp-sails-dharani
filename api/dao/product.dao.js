@@ -82,6 +82,13 @@ class ProductDAO {
         const result = await ds.sendNativeQuery('SELECT p.id,p.name,p.brand_name,COUNT(*)AS count FROM orders o ,products p  WHERE p.id=o.product_id group by p.id');
         return result.rows;
     }
+
+    static async toCheckIsRated(productId, userId) {
+        let ds = await sails.getDatastore();
+        const result = await ds.sendNativeQuery('SELECT * FROM product_ratings WHERE product_id=$1 and user_id=$2', [productId, userId]);
+        let data = result.rows;
+        return data.length > 0 ? data[0] : null;
+    }
 }
 module.exports = {
     getAllProducts: ProductDAO.getAllProducts,
@@ -93,6 +100,7 @@ module.exports = {
     updateProductStatus: ProductDAO.updateProductStatus,
     findOneUsingName: ProductDAO.findOneUsingName,
     save: ProductDAO.save,
-    productReport: ProductDAO.productReport
+    productReport: ProductDAO.productReport,
+    toCheckIsRated: ProductDAO.toCheckIsRated
 
 }

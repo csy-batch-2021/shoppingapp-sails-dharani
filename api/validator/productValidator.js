@@ -34,9 +34,19 @@ class ProductValidator {
             throw new Error('please enter validate Price');
         }
     }
+
+    static async isProductRated(productId, userId) {
+    console.log("Raring", productId);
+    console.log("userId", userId);
+    var result = await ProductDAO.toCheckIsRated(productId, userId);
+    if (result) {
+        throw new Error("Already Product Rating Given");
+    }
+}
 }
 module.exports = {
     toCheckValidProductId: ProductValidator.toCheckValidProductId,
     toCheckOrderedProduct: ProductValidator.toCheckOrderedProduct,
-    validateNewProduct: ProductValidator.validateNewProduct
+    validateNewProduct: ProductValidator.validateNewProduct,
+    isProductRated: ProductValidator.isProductRated
 }
