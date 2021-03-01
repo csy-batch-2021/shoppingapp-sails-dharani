@@ -117,23 +117,33 @@
         console.log("productId", productId);
         var userAdjective = prompt("Enter Product Amount");
         var values = parseInt(userAdjective);
-        if (values) {
-            let url = "/api/product/UpdateProduct";
-            let productValues = { productId: productId, amount: values };
-            axios.patch(url, productValues).then(response => {
-                console.log(response.data.message);
-                toastr.success(response.data.message);
-                loadProducts();
-            }).catch(err => {
-                toastr.error(err.response.data.message);
-            });
+        let isNumber = /^[0-9]+$/;
+        let result = isNumber.test(values)
+        if (values >= 0 && !isNaN(values) && result !== false) {
+            if (values <= 100000) {
+                let url = "/api/product/UpdateProduct";
+                let productValues = { productId: productId, amount: values };
+                axios.patch(url, productValues).then(response => {
+                    console.log(response.data.message);
+                    toastr.success(response.data.message);
+                    loadProducts();
+                }).catch(err => {
+                    toastr.error(err.response.data.message);
+                });
+            } else {
+                toastr.error("Add Below Rs.100000");
+            }
+        } else {
+            toastr.error("Please Enter Valid Amount");
+
         }
     }
 
     function deleteProduct(productId) {
         let url = "/api/product/delete/" + productId;
         axios.delete(url).then(response => {
-            console.log(response.data.message);
+            console.log(response);
+            toastr.success(response.data);
             loadProducts();
         }).catch(err => {
             toastr.error(err.response.data.message);

@@ -14,7 +14,7 @@ class ProductValidator {
         try {
             return await OrderDAO.isProductOrdered(productId);
         } catch (err) {
-            throw new Error('Not able to fetch the orders');
+            throw new Error('Product Already Ordered, Not able to Delete');
         }
     }
     // to check product is exist and check validation for new product 

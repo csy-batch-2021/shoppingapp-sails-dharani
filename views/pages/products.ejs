@@ -123,9 +123,11 @@
             console.log("placing order", productId);
             let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
             let userId = loggedInUser.id;
-            var userAdjective = prompt("Please Enter Product Quantity");
+            var userAdjective = prompt("Please Enter Product Quantity (Between 10 Product will be Added in one Order)");
             var values = parseInt(userAdjective);
-            if (values) {
+            let isNumber = /^[0-9]+$/;
+            let result = isNumber.test(values)
+            if (result !== false && values >= 0 && !isNaN(values) && values <= 10) {
                 let orderObj = { productId: productId, qty: values, userId: userId };
                 console.log(orderObj);
                 // const productOrderAPI = new ProductOrderAPI();
@@ -146,6 +148,8 @@
                     // document.getElementById("errorMessage").innerHTML = err.response.data.message;
                 });
 
+            } else {
+                toastr.error("Please Enter Quantity");
             }
 
 

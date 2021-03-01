@@ -51,8 +51,9 @@ class OrderDAO {
      */
     static async isProductOrdered(productId) {
         let ds = await sails.getDatastore();
-        const result = await ds.sendNativeQuery('SELECE 1 FROM orders WHERE product_id=$1', [productId]);
+        const result = await ds.sendNativeQuery('SELECT 1 FROM orders WHERE product_id=$1', [productId]);
         let data = result.rows;
+
         return data.length > 0;
     }
     // cancel the order
@@ -79,8 +80,10 @@ class OrderDAO {
     }
     // get user ordered report
     static async userOrderReport() {
+
         let ds = await sails.getDatastore();
-        const result = await ds.sendNativeQuery('SELECT  *,COUNT(*)AS countValues,SUM(o.total_amount)AS total FROM orders o,users u ,products p WHERE  p.id=o.product_id and u.id=o.user_id GROUP BY o.user_id');
+        const result = await ds.sendNativeQuery(
+            'SELECT o.user_id,u.user_name,COUNT(*)AS countValues,SUM(o.total_amount)AS total FROM orders o,users u ,products p WHERE  p.id=o.product_id and u.id=o.user_id group by o.user_id');
         return result.rows;
     }
     //get all ordered status count

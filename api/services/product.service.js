@@ -73,13 +73,16 @@ class ProductService {
     // to change product status inActive
     static async deleteProduct(productId) {
         try {
+
             let isProductOrdered = await ProductValidator.toCheckOrderedProduct(productId);
             if (isProductOrdered) {
                 let active = false;
                 await ProductDAO.updateProductStatus(productId, active);  //disable product (active =0)         
+                return "Already Ordered Product,So for that,Product Status Changed";
             }
             else {
                 await ProductDAO.deleteProduct(productId);
+                return "Product Successfully Deleted";
             }
         } catch (err) {
             console.log(err);

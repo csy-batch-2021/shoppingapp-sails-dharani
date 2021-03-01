@@ -15,7 +15,7 @@ class ProductDAO {
     // to search the products based on user product filter
     static async searchProducts(brandName) {
         let ds = await sails.getDatastore();
-        const result = await ds.sendNativeQuery('SELECT * FROM products WHERE brand_name IN($1)', [brandName]);
+        const result = await ds.sendNativeQuery('SELECT * FROM products WHERE brand_name IN($1) AND active=1', [brandName]);
         return result.rows;
     }
     // get all active products
@@ -79,7 +79,7 @@ class ProductDAO {
     // get product report
     static async productReport() {
         let ds = await sails.getDatastore();
-        const result = await ds.sendNativeQuery('SELECT * ,COUNT(*)AS count FROM orders o ,products p  WHERE p.id=o.product_id group by p.id');
+        const result = await ds.sendNativeQuery('SELECT p.id,p.name,p.brand_name,COUNT(*)AS count FROM orders o ,products p  WHERE p.id=o.product_id group by p.id');
         return result.rows;
     }
 }

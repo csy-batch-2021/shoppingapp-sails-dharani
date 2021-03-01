@@ -76,7 +76,10 @@ class OrderService {
     //get User Order Report
     static async userOrderReport() {
         try {
-            return await OrderDAO.userOrderReport();
+            var result = await OrderDAO.userOrderReport();
+            // console.log(result);
+            return result;
+
         } catch (err) {
             throw new Error('Not able to fetch the Report');
         }
