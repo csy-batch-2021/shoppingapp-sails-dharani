@@ -91,15 +91,10 @@
         <td>Rs.${p.total_amount}</td>`
                 if (p.status == "DELIVERED") {
                     temp += `<td><span class="badge bg-success">${p.status}</span></td>`
-
-                }
-                else if (p.status == "ORDERED") {
+                } else if (p.status == "ORDERED") {
                     temp += `<td><span class="badge bg-warning">${p.status}</span></td>`
-
-                }
-                else if (p.status == "CANCELLED") {
+                } else if (p.status == "CANCELLED") {
                     temp += `<td><span class="badge bg-danger">${p.status}</span></td>`
-
                 }
 
                 temp += `<td>${p.created_date}</td>        
@@ -207,15 +202,12 @@
                     toastr.error(err.response.data.message);
                 });
 
-            }
-            else {
+            } else {
                 toastr.error("please Enter Valid Rating (1 to 5)");
             }
         } else if (!values) {
             toastr.error("please Enter Valid Rating (1 to 5)");
-
         }
-
     }
 
 

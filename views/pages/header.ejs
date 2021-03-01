@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">ShoppingApp</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -24,17 +24,22 @@
                     <a class="nav-link" href="myorders">My Orders</a>
                 </li>
                 <li class="nav-item dropdown" data-loggedin="true" data-role="ADMIN">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-loggedin="true" data-role="ADMIN">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                        data-loggedin="true" data-role="ADMIN">
                         Reports
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="userReport" data-loggedin="true" data-role="ADMIN">User
-                                Report</a></li>
-                        <li><a class="dropdown-item" href="productReport" data-loggedin="true" data-role="ADMIN">Product
-                                Report</a></li>
-                        <li><a class="dropdown-item" href="statusReport" data-loggedin="true" data-role="ADMIN">Status
-                                Report</a>
+                        <li>
+                            <a class="dropdown-item" href="userReport" data-loggedin="true" data-role="ADMIN">User Report
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="productReport" data-loggedin="true" data-role="ADMIN">Product Report
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="statusReport" data-loggedin="true" data-role="ADMIN">Status Report
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -73,20 +78,16 @@
         if (user.role == "ADMIN") {
             document.querySelectorAll(".nav-link[data-role='USER'] , .nav-item[data-role='USER'], .dropdown-menu[data-role='USER'], .dropdown-item[data-role='USER']").forEach(obj => obj.style.display = "none");
             document.querySelectorAll(".nav-link[data-role='ADMIN'] , .nav-item[data-role='ADMIN'], .dropdown-menu[data-role='ADMIN'],.dropdown-item[data-role='ADMIN']").forEach(obj => obj.style.display = "block");
-        }
-        else if (user.role == "USER") {
+        } else if (user.role == "USER") {
             document.querySelectorAll(".nav-link[data-role='ADMIN'] , .nav-item[data-role='ADMIN'], .dropdown-menu[data-role='ADMIN'],.dropdown-item[data-role='ADMIN']").forEach(obj => obj.style.display = "none");
             document.querySelectorAll(".nav-link[data-role='USER'] , .nav-item[data-role='USER'], .dropdown-menu[data-role='USER'],.dropdown-item[data-role='USER']").forEach(obj => obj.style.display = "block");
         }
-    }
-    else {
-
+    } else {
         console.log("User is not logged in");
         // Hide menus which has data-loggedin=true
         // Show menus which has data-loggedin=false
         document.querySelectorAll(".nav-link[data-loggedin=true] , .nav-item[data-loggedin=true] , .dropdown-item[data-loggedin=true]").forEach(obj => obj.style.display = "none");
         document.querySelectorAll(".nav-link[data-loggedin=false], .nav-item[data-loggedin=false] , .dropdown-item[data-loggedin=false]").forEach(obj => obj.style.display = "block");
-
     }
 
     function logout() {
