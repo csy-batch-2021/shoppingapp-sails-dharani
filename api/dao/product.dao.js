@@ -82,7 +82,7 @@ class ProductDAO {
         const result = await ds.sendNativeQuery('SELECT p.id,p.name,p.brand_name,COUNT(*)AS count FROM orders o ,products p  WHERE p.id=o.product_id group by p.id');
         return result.rows;
     }
-
+// to check given product is already in rated or not
     static async toCheckIsRated(productId, userId) {
         let ds = await sails.getDatastore();
         const result = await ds.sendNativeQuery('SELECT * FROM product_ratings WHERE product_id=$1 and user_id=$2', [productId, userId]);

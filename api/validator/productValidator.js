@@ -34,15 +34,14 @@ class ProductValidator {
             throw new Error('please enter validate Price');
         }
     }
-
+    // To check given product is rating already or not
     static async isProductRated(productId, userId) {
-    console.log("Raring", productId);
-    console.log("userId", userId);
-    var result = await ProductDAO.toCheckIsRated(productId, userId);
-    if (result) {
-        throw new Error("Already Product Rating Given");
+        console.log("userId", userId);
+        var result = await ProductDAO.toCheckIsRated(productId, userId);
+        if (result) {
+            throw new Error("Already Product Rating Given");
+        }
     }
-}
 }
 module.exports = {
     toCheckValidProductId: ProductValidator.toCheckValidProductId,
