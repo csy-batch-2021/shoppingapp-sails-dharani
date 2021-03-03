@@ -4,7 +4,8 @@ module.exports =
     async function getActiveProductsList(req, res) {
         try {
             let activeProducts = await ProductService.getActiveProduct();
-            res.json(activeProducts);
+            const activeProductsList = activeProducts.sort((a, b) => a.price - b.price);
+            res.json(activeProductsList);
         } catch (err) {
             console.log(err);
             res.status(500).json({ message: err.message });
