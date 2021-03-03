@@ -4,11 +4,13 @@ const UserValidator = require('../validator/userValidator');
 const ProductValidator = require('../validator/productValidator');
 const ProductRatingDAO = require('../dao/productRating.dao');
 const UserDAO = require('../dao/user.dao');
+const ProductRepository = require('../repository/product.dao');
 class ProductService {
     // to get All Products 
     static async getAllProducts() {
         try {
-            return await ProductDAO.getAllProducts();
+            // return await ProductDAO.getAllProducts();
+            return await ProductRepository.getAllProducts();
         } catch (err) {
             console.log(err);
             throw new Error('Not able to fetch the products');
@@ -30,7 +32,8 @@ class ProductService {
     // search the products to using filter
     static async searchProducts(brandNames) {
         try {
-            return await ProductDAO.searchProducts(brandNames);
+            return await ProductRepository.searchProducts(brandNames);
+            // return await ProductDAO.searchProducts(brandNames);
         } catch (err) {
             console.log(err);
             throw new Error('Not able to fetch the products');
@@ -39,9 +42,10 @@ class ProductService {
     // to get all products
     static async getActiveProduct(params) {
         try {
-            return await ProductDAO.findActive();
-
+            return await ProductRepository.findActive();
+            // return await ProductDAO.findActive();
         } catch (err) {
+            console.log(err);
             throw new Error('Not able to fetch active products');
         }
     }
@@ -105,7 +109,7 @@ class ProductService {
                 product.modified_date = new Date();
                 product.created_by = product.userId;
                 product.modified_by = product.userId;
-                return await ProductDAO.save(product);
+                return await ProductRepository.save(product);
             } else {
                 throw new Error('You Are Not Authorized');
             }

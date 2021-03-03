@@ -88,10 +88,13 @@
     <td>${p.brand_name}</td>
     <td>${p.ram}</td>
     <td>Rs.${p.price}</td><td>`
-                if (p.active === 0) {
+                // if (p.active === 0) {
+                if (!p.active) {
                     temp += `<button  type = "button" onClick="changeStatus(${p.id},true)" id="product-btn1" class="btn btn-success" data-product-id=${p.id}>Enable</button>`
                 }
-                if (p.active === 1) {
+                // if (p.active === 1) {
+                if (p.active) {
+
                     temp += `<button type = "button" onClick="changeStatus(${p.id},false)" id ="product-btn1"  class="btn btn-danger" data-product-id=${p.id}>Disable</button>`
                 }
 
