@@ -1,13 +1,16 @@
 
 const ProductDAO = require('../dao/product.dao');
 const OrderDAO = require('../dao/order.dao');
+const ProductRepository = require('../repository/product.dao');
 class ProductValidator {
     // to check is valid product id or not
     static async  toCheckValidProductId(productId) {
-        var result = await ProductDAO.findOne(productId);
+        // var result = await ProductDAO.findOne(productId);
+        var result = await ProductRepository.findOne(productId);
         if (!result) {
             throw new Error('Please Check Product ID');
         }
+        return result;
     }
     // to check product is ordered
     static async toCheckOrderedProduct(productId) {

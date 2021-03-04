@@ -19,7 +19,9 @@ class ProductService {
     // to find and get particular order
     static async getProductDetails(productId) {
         try {
-            var result = await ProductDAO.findOne(productId);
+            // var result = await ProductDAO.findOne(productId);
+            var result = await ProductRepository.findOne(productId);
+
             if (!result) {
                 throw new Error('Please enter valid Prodct Id');
             }
@@ -68,8 +70,11 @@ class ProductService {
     // to update product price
     static async updateProduct(productValues) {
         try {
-            await ProductValidator.toCheckValidProductId(productValues.productId);
-            await ProductDAO.findOneAndUpdate(productValues);
+            let productDetails = await ProductValidator.toCheckValidProductId(productValues.productId);
+            productDetails.price = productValues.amount;
+            // await ProductDAO.findOneAndUpdate(productValues);
+            await ProductRepository.findOneAndUpdate(productDetails);
+
         } catch (err) {
             console.log(err);
             throw err;
@@ -121,16 +126,20 @@ class ProductService {
     // too change the product status active and inactive
     static async changeStatus(productId, status) {
         try {
-            var result = await ProductDAO.findOne(productId);
-            console.log(result);
+            var result = await ProductRepository.findOne(productId);
+            console.log('result', result);
             if (result) {
-                let isActive = result.active === 1;
+                let isActive = result.active === true;
+                console.log("isActive", isActive);
                 if (status === isActive) {
                     throw new Error(
                         'Already record is ' + (isActive ? 'Active' : 'Inactive')
                     );
                 }
-                await ProductDAO.updateProductStatus(result.id, !result.active);
+                result.active = !result.active;
+                // await ProductRepository.updateProductStatus(result.id, !result.active);
+                await ProductRepository.updateProductStatus(result);
+
             } else {
                 throw new Error('Please Enter valid Product ID');
             }

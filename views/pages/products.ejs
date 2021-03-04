@@ -87,7 +87,7 @@
         <td>${p.ram}</td>
         <td>${p.rating != null ? p.rating : ""}</td>
         <td>Rs.${p.price}</td>
-        <td><button type="button" onsubmit="newOrder()" id="order-btn1" data-product-id=${p.id}>Order</button>
+        <td><button type="button" onsubmit="newOrder()" id="order-btn1" data-product-id='${p._id}'>Order</button>
     </tr>`;
 
                     content += temp;
@@ -103,7 +103,7 @@
 
             //Assign Listeners
             document.querySelectorAll("#order-btn1").forEach(element => {
-                let productId = parseInt(element.getAttribute("data-product-id"));
+                let productId = element.getAttribute("data-product-id");
                 console.log(productId);
                 element.addEventListener('click', e => {
                     placeOrder(productId);
@@ -128,7 +128,7 @@
             let isNumber = /^[0-9]+$/;
             let result = isNumber.test(values)
             if (result !== false && values >= 0 && !isNaN(values) && values <= 10) {
-                let orderObj = { productId: productId, qty: values, userId: userId };
+                let orderObj = { productId: productId, qty: values, userId: userId, userName: loggedInUser.user_name };
                 console.log(orderObj);
                 // const productOrderAPI = new ProductOrderAPI();
                 // let url = "http://localhost:3000/api/addOrder";

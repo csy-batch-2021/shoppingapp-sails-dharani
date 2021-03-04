@@ -3,6 +3,7 @@ const ProductDAO = require('../dao/product.dao');
 const OrderValidator = require('../validator/orderValidator');
 const ProductService = require('../services/product.service');
 const UserValidator = require('../validator/userValidator');
+const OrderRepository = require('../repository/order.dao');
 class OrderService {
     // to add a new order
     static async addOrder(orderDetails) {
@@ -10,13 +11,19 @@ class OrderService {
             await OrderValidator.validCheck(orderDetails);
             await OrderValidator.isValidId(orderDetails);
             let product = await ProductService.getProductDetails(orderDetails.productId);
-            orderDetails.totalAmount = orderDetails.qty * product.price;
+            console.log("add order product details", product);
+            orderDetails.total_amount = orderDetails.qty * product.price;
             orderDetails.status = 'ORDERED';
             orderDetails.created_date = new Date();
             orderDetails.modified_date = new Date();
             orderDetails.created_by = orderDetails.userId;
             orderDetails.modified_by = orderDetails.userId;
-            await OrderDAO.save(orderDetails);
+            orderDetails.name = product.name;
+            orderDetails.price = product.price;
+            orderDetails.user_name = orderDetails.userName;
+            // await OrderDAO.save(orderDetails);
+            await OrderRepository.save(orderDetails);
+
             return 'Product Ordered sucessfully';
         } catch (err) {
             console.log(err);
@@ -26,7 +33,9 @@ class OrderService {
     //get all orders
     static async getAllOrder() {
         try {
-            return await OrderDAO.findAll();
+            // return await OrderDAO.findAll();
+            return await OrderRepository.findAll();
+
         } catch (err) {
             throw new Error('Not able to fetch the orders');
         }
@@ -34,8 +43,9 @@ class OrderService {
     // to change order status delivered
     static async changeOrderStatus(orderId, userId, status) {
         try {
-            await OrderValidator.isValidForDelivery(orderId, status);
-            return await OrderDAO.findOneAndUpdate(orderId, status, userId);
+            let orderDetails = await OrderValidator.isValidForDelivery(orderId, status);
+            orderDetails.status = "DELIVERED";
+            return await OrderRepository.findOneAndUpdate(orderDetails);
         } catch (err) {
             console.log(err.message);
             throw err;
@@ -44,12 +54,13 @@ class OrderService {
     // to cancel order
     static async cancelOrder(orderDetails) {
         try {
+            console.log(orderDetails)
             let userId = orderDetails.userId;
             let orderId = orderDetails.orderId;
-            await UserValidator.toCheckValidUserId(userId);
-            await OrderValidator.isExistOrderId(orderId);
-            var result = await OrderDAO.cancelOrder(orderDetails);
-            console.log(result);
+            // await UserValidator.toCheckValidUserId(userId);
+            var orderResult = await OrderValidator.isExistOrderId(orderId);
+            orderResult.status = "CANCELLED";
+            var result = await OrderRepository.cancelOrder(orderResult[0]);
             return 'Your Amount Has Successfully Refunded To Your Wallet'
         } catch (err) {
             console.log(err);
@@ -60,8 +71,9 @@ class OrderService {
     // to find by order based on user id
     static async getMyOrder(userId) {
         try {
-            return await OrderDAO.findMyOrder(userId);
+            return await OrderRepository.findMyOrder(userId);
         } catch (err) {
+            console.log(err);
             throw new Error('Not able to fetch the orders');
         }
     }
@@ -70,6 +82,7 @@ class OrderService {
         try {
             return await OrderDAO.myOrdersStatusCount(userId);
         } catch (err) {
+            console.log(err);
             throw new Error('Not able to fetch the orders');
         }
     }
@@ -87,7 +100,9 @@ class OrderService {
     // get Ordered Status Report
     static async orderStatusReport() {
         try {
-            return await OrderDAO.orderStatusReport();
+            // return await OrderDAO.orderStatusReport();
+            return await OrderRepository.orderStatusReport();
+
         } catch (err) {
             throw new Error('Not able to fetch the Report');
         }

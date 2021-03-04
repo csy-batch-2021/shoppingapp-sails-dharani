@@ -4,12 +4,29 @@ class ProductRepository {
 
     //find one product by id
     static async findOne(id) {
+        try {
+            let response = await axios.request({
+                url: '/products/' + id,
+                method: 'get',
+                baseURL: DB_URL,
+                auth: {
+                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
+                    password: '53fcbf5faa893817605b85afaf7af46f',
+                },
+                data: null,
+            });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+            throw err;
+            // throw new Error('Please Enter Valid Product Id');
+        }
 
     }
     // get all products
     static async getAllProducts() {
         let response = await axios.request({
-            url: '/products/_all_docs?include_docs=true',
+            url: '/products/_design/products/_view/product-list-view',
             method: 'get',
             baseURL: DB_URL,
             auth: {
@@ -19,7 +36,8 @@ class ProductRepository {
             data: null,
         });
         let data = response.data.rows;
-        let productList = data.map(obj => obj.doc);
+        // console.log("fetch product", data);
+        let productList = data.map(obj => obj.value);
         return productList;
     }
     // to search the products based on user product filter
@@ -54,11 +72,41 @@ class ProductRepository {
     }
     // to fine ond and update product
     static async findOneAndUpdate(productValues) {
-
+        try {
+            let response = await axios.request({
+                url: '/products/' + productValues._id + "?rev=" + productValues._rev,
+                method: 'put',
+                baseURL: DB_URL,
+                auth: {
+                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
+                    password: '53fcbf5faa893817605b85afaf7af46f',
+                },
+                data: productValues,
+            });
+            return response.data;
+        } catch (err) {
+            console.log("error", err);
+            throw err;
+        }
     }
     // update product status active and inactive
-    static async updateProductStatus(productId, status) {
-
+    static async updateProductStatus(productDetails) {
+        try {
+            let response = await axios.request({
+                url: '/products/' + productDetails._id + "?rev=" + productDetails._rev,
+                method: 'put',
+                baseURL: DB_URL,
+                auth: {
+                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
+                    password: '53fcbf5faa893817605b85afaf7af46f',
+                },
+                data: productDetails,
+            });
+            return response.data;
+        } catch (err) {
+            console.log("error", err);
+            throw err;
+        }
     }
     // to delete products
     static async deleteProduct(productId) {
@@ -85,12 +133,12 @@ class ProductRepository {
 }
 module.exports = {
     getAllProducts: ProductRepository.getAllProducts,
-    // findOne: ProductDAO.findOne,
+    findOne: ProductRepository.findOne,
     searchProducts: ProductRepository.searchProducts,
     findActive: ProductRepository.findActive,
-    // findOneAndUpdate: ProductDAO.findOneAndUpdate,
+    findOneAndUpdate: ProductRepository.findOneAndUpdate,
     // deleteProduct: ProductDAO.deleteProduct,
-    // updateProductStatus: ProductDAO.updateProductStatus,
+    updateProductStatus: ProductRepository.updateProductStatus,
     // findOneUsingName: ProductDAO.findOneUsingName,
     save: ProductRepository.save,
     // productReport: ProductDAO.productReport,

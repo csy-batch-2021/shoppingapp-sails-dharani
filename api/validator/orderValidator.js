@@ -2,6 +2,8 @@
 const UserDAO = require('../dao/user.dao');
 const ProductDAO = require('../dao/product.dao');
 const OrderDAO = require('../dao/order.dao');
+const ProductRepository = require('../repository/product.dao');
+const OrderRepository = require('../repository/order.dao');
 class OrderValidator {
     //to check is number
     static isValidNumber(input, message) {
@@ -18,7 +20,9 @@ class OrderValidator {
     // to is valid id or not 
     static async isValidId(orderDetails) {
         var userResult = await UserDAO.findOne(orderDetails.userId);
-        var productResult = await ProductDAO.findOne(orderDetails.productId);
+        // var productResult = await ProductDAO.findOne(orderDetails.productId);
+        var productResult = await ProductRepository.findOne(orderDetails.productId);
+
         if (userResult === null) {
             throw new Error('Please Check UserID');
         } else if (productResult === null) {
@@ -27,7 +31,7 @@ class OrderValidator {
     }
     //to check is valid fot status change to delivery
     static async isValidForDelivery(orderId, status) {
-        var result = await OrderDAO.findOne(orderId);
+        var result = await OrderRepository.findOne(orderId);
         var statusText = ['ORDERED', 'DELIVERED', 'CANCELLED'];
         var statusCheck = statusText.includes(status);
         if (!result) {
@@ -39,10 +43,13 @@ class OrderValidator {
         } else if (result.status === 'CANCELLED') {
             throw new Error('Already Order Product has been Cancelled');
         }
+        return result;
     }
     //to is exist order id and also check status
     static async isExistOrderId(orderId) {
-        var result = await OrderDAO.findOne(orderId);
+        // var result = await OrderDAO.findOne(orderId);
+        var result = await OrderRepository.findOne(orderId);
+
         if (!result) {
             throw new Error('Please Entered Valid OrderId');
         } else if (result.status === 'DELIVERED') {
@@ -50,6 +57,7 @@ class OrderValidator {
         } else if (result.status === 'CANCELLED') {
             throw new Error('Already Order Product has been Cancelled');
         }
+        return result;
     }
 }
 module.exports = {

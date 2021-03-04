@@ -69,24 +69,23 @@
         let content = "";
         let i = 1;
 
-        // console.log("products", products.length);
         if (products.length != 0) {
             for (let p of products) {
 
                 let temp = ` <tr>
-        <td>${i}</td>
-        <td>${p.user_name}</td>
-        <td>${p.name}</td>
-        <td>Rs.${p.price}</td>        
-        <td>${p.qty}</td>
-        <td>Rs.${p.total_amount}</td>
-        <td>${p.status}</td>
-        <td>${p.created_date}</td>        
-        <td>${p.modified_date}</td> <td>`
+<td>${i}</td>
+<td>${p.userName}</td>
+<td>${p.name}</td>
+<td>Rs.${p.price}</td>        
+<td>${p.qty}</td>
+<td>Rs.${p.total_amount}</td>
+<td>${p.status}</td>
+<td>${moment(p.created_date).format('DD-MM-YYYY')}</td>    
+<td>${moment(p.modified_date).format('DD-MM-YYYY')}</td> <td>`
 
                 if (p.status == "ORDERED") {
-                    temp += `<button type = "button"  id = "order-btn1" data-product-id=${p.id}> Delivered</button >`
-                    temp += ` <button type="button" onclick="orderCancel(${p.id})" id="cancel-btn1" data-cancel-id=${p.id}>Cancel</button>`
+                    temp += `<button type = "button"  id ="order-btn1" data-product-id='${p._id}'> Delivered</button >`
+                    temp += ` <button type="button" onclick="orderCancel('${p._id}')" id="cancel-btn1" data-cancel-id='${p._id}'>Cancel</button>`
                 }
 
                 `</td ></tr >`;
@@ -94,6 +93,29 @@
                 content += temp;
                 i++;
             }
+            //     for (let p of products) {
+
+            //         let temp = ` <tr>
+            // <td>${i}</td>
+            // <td>${p.user_name}</td>
+            // <td>${p.name}</td>
+            // <td>Rs.${p.price}</td>        
+            // <td>${p.qty}</td>
+            // <td>Rs.${p.total_amount}</td>
+            // <td>${p.status}</td>
+            // <td>${p.created_date}</td>        
+            // <td>${p.modified_date}</td> <td>`
+
+            //         if (p.status == "ORDERED") {
+            //             temp += `<button type = "button"  id = "order-btn1" data-product-id=${p.id}> Delivered</button >`
+            //             temp += ` <button type="button" onclick="orderCancel(${p.id})" id="cancel-btn1" data-cancel-id=${p.id}>Cancel</button>`
+            //         }
+
+            //         `</td ></tr >`;
+
+            //         content += temp;
+            //         i++;
+            //     }
         }
         else {
             content = "No Records Found"
@@ -106,7 +128,7 @@
 
         //Assign Listeners
         document.querySelectorAll("#order-btn1").forEach(element => {
-            let orderId = parseInt(element.getAttribute("data-product-id"));
+            let orderId = element.getAttribute("data-product-id");
             // console.log("productId", orderId);
             element.addEventListener('click', e => {
                 deliveryStatusChange(orderId);
@@ -117,14 +139,10 @@
         function deliveryStatusChange(orderId) {
             let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
             let loggedInUserId = loggedInUser.id;
-
             let userDetails = { loggedInUserId: loggedInUserId, orderId: orderId, status: "DELIVERED" }
-
             console.log("userDetails", userDetails);
-
             // let url = "http://localhost:3000/api/changeorderstatus";
             let url = "/api/changeorderstatus";
-
             axios.post(url, userDetails).then(response => {
                 // productOrderAPI.orderProduct(orderObj).then(response => {
                 console.log(response.data);
@@ -138,7 +156,6 @@
                 toastr.error("Your Not Authorized")
                 // document.getElementById("errorMessage").innerHTML = err.response.data.message;
             });
-
         }
 
     }

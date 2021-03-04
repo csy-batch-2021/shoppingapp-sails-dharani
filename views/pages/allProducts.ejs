@@ -37,6 +37,7 @@
         let userId = loggedInUser.id;
         let url = "/api/getAllProducts?loggedInUserId=" + userId;
         axios.get(url).then(response => {
+            console.table(response.data);
             displayProducts(response.data);
         }, err => {
             handleError(err);
@@ -90,18 +91,18 @@
     <td>Rs.${p.price}</td><td>`
                 // if (p.active === 0) {
                 if (!p.active) {
-                    temp += `<button  type = "button" onClick="changeStatus(${p.id},true)" id="product-btn1" class="btn btn-success" data-product-id=${p.id}>Enable</button>`
+                    temp += `<button  type="button" onclick="changeStatus('${p._id}',true)" id="product-btn1" class="btn btn-success" data-product-id=${p._id}>Enable</button>`
                 }
                 // if (p.active === 1) {
                 if (p.active) {
 
-                    temp += `<button type = "button" onClick="changeStatus(${p.id},false)" id ="product-btn1"  class="btn btn-danger" data-product-id=${p.id}>Disable</button>`
+                    temp += `<button type="button" onclick="changeStatus('${p._id}',false)" id="product-btn1"  class="btn btn-danger" data-product-id=${p._id}>Disable</button>`
                 }
 
                 temp += `</td>
-                <td>  <button type = "button" onClick="editProduct(${p.id})"  data-product-id=${p.id}>Edit</button> &nbsp;`
+                <td>  <button type="button" onClick="editProduct('${p._id}')"  data-product-id=${p._id}>Edit</button> &nbsp;`
                 if (p.active === 1) {
-                    temp += `<button type = "button" onClick="deleteProduct(${p.id})"  data-product-id=${p.id}>Delete</button>`
+                    temp += `<button type="button" onClick="deleteProduct('${p._id}')"  data-product-id=${p._id}>Delete</button>`
                 }
                 temp += `</td>
                 </tr >`;
@@ -155,6 +156,7 @@
     }
 
     function changeStatus(productId, status) {
+        console.log("change status id", productId);
         if (confirm('Do you want to Change this Product Status?')) {
             let loggedInUser = JSON.parse(localStorage.getItem("LOGGED_IN_USER"));
             let userId = loggedInUser.id;

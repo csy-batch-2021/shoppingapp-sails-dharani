@@ -44,6 +44,7 @@
         getOrderStatusCount(userId);
         let url = "/api/myorders?userId=" + userId;
         axios.get(url).then(response => {
+            console.log(response.data);
             displayProducts(response.data);
         });
     }
@@ -97,13 +98,16 @@
                     temp += `<td><span class="badge bg-danger">${p.status}</span></td>`
                 }
 
-                temp += `<td>${p.created_date}</td>        
-        <td>${p.modified_date}</td>     <td>  `
+                temp += `<td>${moment(p.created_date).format('DD-MM-YYYY')}</td>        
+        <td>${moment(p.modified_date).format('DD-MM-YYYY')}</td>     <td>  `
 
                 if (p.status == "ORDERED") {
                     temp = temp +
 
-                        `<button type="button"  id="order-btn1" data-product-id=${p.id}>Cancel</button>`;
+                        // `<button type="button"  id="order-btn1" data-product-id=${p.id}>Cancel</button>`;
+
+                        `<button type="button"  id="order-btn1" data-product-id=${p._id}>Cancel</button>`;
+
                 }
 
 
@@ -125,7 +129,7 @@
 
         //Assign Listeners
         document.querySelectorAll("#order-btn1").forEach(element => {
-            let orderId = parseInt(element.getAttribute("data-product-id"));
+            let orderId = element.getAttribute("data-product-id");
             console.log("productId", orderId);
             element.addEventListener('click', e => {
                 cancelOrder(orderId);
