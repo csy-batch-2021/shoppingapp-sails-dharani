@@ -1,8 +1,10 @@
 const axios = require('axios');
 const DB_URL = 'https://6a5a0e85-6282-465b-b46d-364a80e1b15d-bluemix.cloudantnosqldb.appdomain.cloud';
 class ProductRepository {
-
-    //find one product by id
+    /**
+     * 
+     * @param {*get one order based on id} id 
+     */
     static async findOne(id) {
         try {
             let response = await axios.request({
@@ -19,11 +21,11 @@ class ProductRepository {
         } catch (err) {
             console.log(err);
             throw err;
-            // throw new Error('Please Enter Valid Product Id');
         }
-
     }
-    // get all products
+    /**
+     * get all products
+     */
     static async getAllProducts() {
         let response = await axios.request({
             url: '/products/_design/products/_view/product-list-view',
@@ -40,7 +42,10 @@ class ProductRepository {
         let productList = data.map(obj => obj.value);
         return productList;
     }
-    // to search the products based on user product filter
+    /**
+     * 
+     * @param {*to search the products based on user product filter brandName} brandNames 
+     */
     static async searchProducts(brandNames) {
         console.log("brandNames", brandNames);
         let requestedData = {
@@ -64,9 +69,10 @@ class ProductRepository {
         return productList;
 
     }
-
-
-    // to search the products based on productId
+    /**
+     * 
+     * @param {*search product based on product id} productId 
+     */
     static async searchProductsById(productId) {
         let requestedData = {
             selector: { _id: { $in: productId } },
@@ -84,14 +90,18 @@ class ProductRepository {
         let productList = response.data.docs;
         return productList;
     }
-
-    // get all active products
+    /**
+     * get all active products
+     */
     static async findActive() {
         let products = await this.getAllProducts();
         return products.filter(obj => obj.active);
 
     }
-    // to fine ond and update product
+    /**
+     * 
+     * @param {*find one product and update product details} productValues 
+     */
     static async findOneAndUpdate(productValues) {
         try {
             let response = await axios.request({
@@ -110,7 +120,10 @@ class ProductRepository {
             throw err;
         }
     }
-    // update product status active and inactive
+    /**
+     * 
+     * @param {*update product status Active and Inactive} productDetails 
+     */
     static async updateProductStatus(productDetails) {
         try {
             let response = await axios.request({
@@ -143,7 +156,9 @@ class ProductRepository {
 
 
     }
-    // get product report
+    /**
+     * get pruduct based ordered count
+     */
     static async productReport() {
         try {
             let response = await axios.request({

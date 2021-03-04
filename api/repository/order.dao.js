@@ -2,7 +2,10 @@
 const axios = require('axios');
 const DB_URL = 'https://6a5a0e85-6282-465b-b46d-364a80e1b15d-bluemix.cloudantnosqldb.appdomain.cloud';
 class OrderRepository {
-    // add new order
+    /**
+     * 
+     * @param {*to add new order based on orderDetails} orderDetails 
+     */
     static async  save(orderDetails) {
         try {
             let result = await axios.request({
@@ -20,7 +23,9 @@ class OrderRepository {
             throw err;
         }
     }
-    // find all orders
+    /**
+     * get all orders details
+     */
     static async findAll() {
         try {
             let response = await axios.request({
@@ -41,7 +46,11 @@ class OrderRepository {
             throw err;
         }
     }
-    // find one order and update status
+
+    /**
+     * 
+     * @param {*find one order and update status} orderDetails 
+     */
     static async findOneAndUpdate(orderDetails) {
         try {
             let response = await axios.request({
@@ -61,7 +70,10 @@ class OrderRepository {
         }
 
     }
-    // find one order
+    /**
+     * 
+     * @param {*find one order based on id} id 
+     */
     static async findOne(id) {
         let response = await axios.request({
             url: '/orders/' + id,
@@ -87,9 +99,11 @@ class OrderRepository {
     static async isProductOrdered(productId) {
 
     }
-    // cancel the order
+    /**
+     * 
+     * @param {*cancel the order} orderDetails 
+     */
     static async cancelOrder(orderDetails) {
-        orderDetails.status = "CANCELLED";
         console.log("Cancelorder details", orderDetails);
 
         try {
@@ -111,7 +125,10 @@ class OrderRepository {
         }
 
     }
-    //get my order
+    /**
+     * 
+     * @param {*get userId based user orders} userId 
+     */
     static async findMyOrder(userId) {
         let requestedData = {
             selector: {
@@ -139,7 +156,9 @@ class OrderRepository {
     static async userOrderReport() {
 
     }
-    //get all ordered status count
+    /**
+     * count ordered count based on status
+     */
     static async orderStatusReport() {
         try {
             let response = await axios.request({
