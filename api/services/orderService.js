@@ -60,7 +60,7 @@ class OrderService {
             // await UserValidator.toCheckValidUserId(userId);
             var orderResult = await OrderValidator.isExistOrderId(orderId);
             orderResult.status = "CANCELLED";
-            var result = await OrderRepository.cancelOrder(orderResult[0]);
+            var result = await OrderRepository.cancelOrder(orderResult);
             return 'Your Amount Has Successfully Refunded To Your Wallet'
         } catch (err) {
             console.log(err);
