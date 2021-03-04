@@ -64,6 +64,27 @@ class ProductRepository {
         return productList;
 
     }
+
+
+    // to search the products based on productId
+    static async searchProductsById(productId) {
+        let requestedData = {
+            selector: { _id: { $in: productId } },
+        }
+        let response = await axios.request({
+            url: '/products/_find',
+            method: 'post',
+            baseURL: DB_URL,
+            auth: {
+                username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
+                password: '53fcbf5faa893817605b85afaf7af46f',
+            },
+            data: requestedData
+        });
+        let productList = response.data.docs;
+        return productList;
+    }
+
     // get all active products
     static async findActive() {
         let products = await this.getAllProducts();
@@ -124,6 +145,23 @@ class ProductRepository {
     }
     // get product report
     static async productReport() {
+        try {
+            let response = await axios.request({
+                url: '/orders/_design/product-count/_view/product-count-view?group_level=1',
+                method: 'get',
+                baseURL: DB_URL,
+                auth: {
+                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
+                    password: '53fcbf5faa893817605b85afaf7af46f',
+                },
+                data: null,
+            });
+            let data = response.data.rows;
+            return data;
+
+        } catch (err) {
+            throw err;
+        }
 
     }
     // to check given product is already in rated or not
@@ -141,7 +179,8 @@ module.exports = {
     updateProductStatus: ProductRepository.updateProductStatus,
     // findOneUsingName: ProductDAO.findOneUsingName,
     save: ProductRepository.save,
-    // productReport: ProductDAO.productReport,
-    // toCheckIsRated: ProductDAO.toCheckIsRated
+    productReport: ProductRepository.productReport,
+    // toCheckIsRated: ProductDAO.toCheckIsRated,
+    searchProductsById: ProductRepository.searchProductsById
 
 }

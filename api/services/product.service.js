@@ -151,8 +151,17 @@ class ProductService {
     //to count the ordered product 
     static async productReport() {
         try {
-            return await ProductDAO.productReport();
+            let productCount = await ProductRepository.productReport();
+            let productId = productCount.map(obj => obj.key);
+            let productIdBasedValues = await ProductRepository.searchProductsById(productId);
+            let productSales = [];
+            for (let p of productIdBasedValues) {
+                p.count = productCount.find(obj => obj.key == p._id).value;
+                productSales.push(p);
+            }
+            return productSales;
         } catch (err) {
+            console.log(err);
             throw new Error('Not able to fetch Product Report');
         }
     }
