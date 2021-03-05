@@ -1,46 +1,19 @@
 const axios = require('axios');
 const DB_URL = 'https://6a5a0e85-6282-465b-b46d-364a80e1b15d-bluemix.cloudantnosqldb.appdomain.cloud';
+const DAOUtil = require('./dao.util');
 class ProductRepository {
     /**
      * 
      * @param {*get one order based on id} id 
      */
     static async findOne(id) {
-        try {
-            let response = await axios.request({
-                url: '/products/' + id,
-                method: 'get',
-                baseURL: DB_URL,
-                auth: {
-                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                    password: '53fcbf5faa893817605b85afaf7af46f',
-                },
-                data: null,
-            });
-            return response.data;
-        } catch (err) {
-            console.log(err);
-            throw err;
-        }
+        return DAOUtil.findOne('/products/' + id);
     }
     /**
      * get all products
      */
     static async getAllProducts() {
-        let response = await axios.request({
-            url: '/products/_design/products/_view/product-list-view',
-            method: 'get',
-            baseURL: DB_URL,
-            auth: {
-                username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                password: '53fcbf5faa893817605b85afaf7af46f',
-            },
-            data: null,
-        });
-        let data = response.data.rows;
-        // console.log("fetch product", data);
-        let productList = data.map(obj => obj.value);
-        return productList;
+        return DAOUtil.getView('/products/_design/products/_view/product-list-view');
     }
     /**
      * 
@@ -54,20 +27,7 @@ class ProductRepository {
             // 'limit': 5,
             // skip: 5
         }
-        console.log("requestedData", requestedData);
-        let response = await axios.request({
-            url: '/products/_find',
-            method: 'post',
-            baseURL: DB_URL,
-            auth: {
-                username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                password: '53fcbf5faa893817605b85afaf7af46f',
-            },
-            data: requestedData
-        });
-        let productList = response.data.docs;
-        return productList;
-
+        return DAOUtil.search('/products/_find', requestedData);
     }
     /**
      * 
@@ -76,19 +36,8 @@ class ProductRepository {
     static async searchProductsById(productId) {
         let requestedData = {
             selector: { _id: { $in: productId } },
-        }
-        let response = await axios.request({
-            url: '/products/_find',
-            method: 'post',
-            baseURL: DB_URL,
-            auth: {
-                username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                password: '53fcbf5faa893817605b85afaf7af46f',
-            },
-            data: requestedData
-        });
-        let productList = response.data.docs;
-        return productList;
+        };
+        return DAOUtil.search('/products/_find', requestedData);
     }
     /**
      * get all active products
@@ -96,51 +45,20 @@ class ProductRepository {
     static async findActive() {
         let products = await this.getAllProducts();
         return products.filter(obj => obj.active);
-
     }
     /**
      * 
      * @param {*find one product and update product details} productValues 
      */
     static async findOneAndUpdate(productValues) {
-        try {
-            let response = await axios.request({
-                url: '/products/' + productValues._id + "?rev=" + productValues._rev,
-                method: 'put',
-                baseURL: DB_URL,
-                auth: {
-                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                    password: '53fcbf5faa893817605b85afaf7af46f',
-                },
-                data: productValues,
-            });
-            return response.data;
-        } catch (err) {
-            console.log("error", err);
-            throw err;
-        }
+        return DAOUtil.findAndUpdate('/products/' + productValues._id + "?rev=" + productValues._rev, productValues);
     }
     /**
      * 
      * @param {*update product status Active and Inactive} productDetails 
      */
     static async updateProductStatus(productDetails) {
-        try {
-            let response = await axios.request({
-                url: '/products/' + productDetails._id + "?rev=" + productDetails._rev,
-                method: 'put',
-                baseURL: DB_URL,
-                auth: {
-                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                    password: '53fcbf5faa893817605b85afaf7af46f',
-                },
-                data: productDetails,
-            });
-            return response.data;
-        } catch (err) {
-            console.log("error", err);
-            throw err;
-        }
+        return DAOUtil.findAndUpdate('/products/' + productDetails._id + "?rev=" + productDetails._rev, productDetails);
     }
     // to delete products
     static async deleteProduct(productId) {
@@ -160,23 +78,7 @@ class ProductRepository {
      * get pruduct based ordered count
      */
     static async productReport() {
-        try {
-            let response = await axios.request({
-                url: '/orders/_design/product-count/_view/product-count-view?group_level=1',
-                method: 'get',
-                baseURL: DB_URL,
-                auth: {
-                    username: 'apikey-v2-1zry8ajgypo2q14hzjvdwuemmaiixcz9dhmtedvr14ck',
-                    password: '53fcbf5faa893817605b85afaf7af46f',
-                },
-                data: null,
-            });
-            let data = response.data.rows;
-            return data;
-
-        } catch (err) {
-            throw err;
-        }
+        return DAOUtil.report('/orders/_design/product-count/_view/product-count-view?group_level=1');
 
     }
     // to check given product is already in rated or not
