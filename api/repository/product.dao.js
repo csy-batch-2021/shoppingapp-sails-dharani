@@ -3,11 +3,25 @@ const DB_URL = 'https://6a5a0e85-6282-465b-b46d-364a80e1b15d-bluemix.cloudantnos
 const DAOUtil = require('./dao.util');
 class ProductRepository {
     /**
-     * 
-     * @param {*get one order based on id} id 
+     * to find one product value bases on product IdF
+     * @param {string} id 
      */
-    static async findOne(id) {
+    static async findOneOld(id) {
         return DAOUtil.findOne('/products/' + id);
+    }
+    /**
+       * to find one product value bases on product IdF
+       * @param {string} id 
+       */
+    static async findOne(id) {
+        let promiseObj = new Promise((resolve, reject) => {
+            DAOUtil.findOne('/products/' + id).then(response => {
+                resolve(response);
+            }, err => {
+                reject(err);
+            })
+        })
+        return promiseObj;
     }
     /**
      * get all products
@@ -16,8 +30,8 @@ class ProductRepository {
         return DAOUtil.getView('/products/_design/products/_view/product-list-view');
     }
     /**
-     * 
-     * @param {*to search the products based on user product filter brandName} brandNames 
+     * to search products based on brandName
+     * @param {array} brandNames
      */
     static async searchProducts(brandNames) {
         console.log("brandNames", brandNames);
@@ -30,8 +44,8 @@ class ProductRepository {
         return DAOUtil.search('/products/_find', requestedData);
     }
     /**
-     * 
-     * @param {*search product based on product id} productId 
+     * to search product based on product id
+     * @param {string} productId
      */
     static async searchProductsById(productId) {
         let requestedData = {
@@ -47,18 +61,49 @@ class ProductRepository {
         return products.filter(obj => obj.active);
     }
     /**
-     * 
-     * @param {*find one product and update product details} productValues 
+     * find one product and update product price
+     * @param {object} productValues  
      */
-    static async findOneAndUpdate(productValues) {
+    static async findOneAndUpdateOld(productValues) {
         return DAOUtil.findAndUpdate('/products/' + productValues._id + "?rev=" + productValues._rev, productValues);
     }
+
     /**
-     * 
-     * @param {*update product status Active and Inactive} productDetails 
+    * find one product and update product price
+    * @param {object} productValues  
+    */
+    static async findOneAndUpdate(productValues) {
+        let promiseObj = new Promise((resolve, reject) => {
+            DAOUtil.findAndUpdate('/products/' + productValues._id + "?rev=" + productValues._rev, productValues).then(response => {
+                if (response) {
+                    resolve(response);
+                } else {
+                    reject(err);
+                }
+            });
+        })
+        return promiseObj;
+    }
+    /**
+     * to change product status to be active or inactive
+     * @param {Object} productDetails 
+     */
+    static async updateProductStatusOld(productDetails) {
+        return DAOUtil.findAndUpdate('/products/' + productDetails._id + "?rev=" + productDetails._rev, productDetails);
+    }
+    /**
+     * to change product status to be active or inactive
+     * @param {Object} productDetails 
      */
     static async updateProductStatus(productDetails) {
-        return DAOUtil.findAndUpdate('/products/' + productDetails._id + "?rev=" + productDetails._rev, productDetails);
+        let promiseObj = new Promise((resolve, reject) => {
+            DAOUtil.findAndUpdate('/products/' + productDetails._id + "?rev=" + productDetails._rev, productDetails).then(response => {
+                resolve(response);
+            }, err => {
+                reject(err);
+            });
+        });
+        return promiseObj;
     }
     // to delete products
     static async deleteProduct(productId) {

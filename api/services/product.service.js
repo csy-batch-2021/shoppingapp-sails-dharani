@@ -6,7 +6,9 @@ const ProductRatingDAO = require('../dao/productRating.dao');
 const UserDAO = require('../dao/user.dao');
 const ProductRepository = require('../repository/product.dao');
 class ProductService {
-    // to get All Products 
+    /**
+     * to get all products
+     */
     static async getAllProducts() {
         try {
             // return await ProductDAO.getAllProducts();
@@ -16,7 +18,10 @@ class ProductService {
             throw new Error('Not able to fetch the products');
         }
     }
-    // to find and get particular order
+    /**
+     * get one product details based on productId
+     * @param {string} productId 
+     */
     static async getProductDetails(productId) {
         try {
             // var result = await ProductDAO.findOne(productId);
@@ -31,7 +36,10 @@ class ProductService {
             throw err;
         }
     }
-    // search the products to using filter
+    /**
+     * to ger a brandName name based get product details
+     * @param {array} brandNames
+     */
     static async searchProducts(brandNames) {
         try {
             return await ProductRepository.searchProducts(brandNames);
@@ -41,8 +49,10 @@ class ProductService {
             throw new Error('Not able to fetch the products');
         }
     }
-    // to get all products
-    static async getActiveProduct(params) {
+    /**
+     * to get all active products
+     */
+    static async getActiveProduct() {
         try {
             return await ProductRepository.findActive();
             // return await ProductDAO.findActive();
@@ -51,14 +61,19 @@ class ProductService {
             throw new Error('Not able to fetch active products');
         }
     }
-    // to add rating for products
+    /**
+     * add product rating for one product
+     * @param {object} productRatingDetails 
+     */
     static async addProductRating(productRatingDetails) {
         try {
             await UserValidator.toCheckValidUserId(productRatingDetails.userId);
             await ProductValidator.isProductRated(productRatingDetails.productId, productRatingDetails.userId);
-            await ProductValidator.toCheckValidProductId(
+            ProductValidator.toCheckValidProductId(
                 productRatingDetails.productId
-            );
+            ).then(result => {
+                console.log('addProductRating', result);
+            });
             productRatingDetails.created_by = productRatingDetails.userId;
             productRatingDetails.modified_by = productRatingDetails.userId;
             return await ProductRatingDAO.save(productRatingDetails);
@@ -67,8 +82,11 @@ class ProductService {
             throw err;
         }
     }
-    // to update product price
-    static async updateProduct(productValues) {
+    /**
+     * update product price
+     * @param {object} productValues 
+     */
+    static async updateProductOld(productValues) {
         try {
             let productDetails = await ProductValidator.toCheckValidProductId(productValues.productId);
             productDetails.price = productValues.amount;
@@ -80,7 +98,36 @@ class ProductService {
             throw err;
         }
     }
-    // to change product status inActive
+    /**
+       * update product price
+       * @param {object} productValues 
+       */
+    static async updateProduct(productValues) {
+        try {
+            // let productDetails = await
+            ProductValidator.toCheckValidProductId(productValues.productId).then(response => {
+                console.log('updateProduct', response);
+                response.price = productValues.amount;
+                ProductRepository.findOneAndUpdate(response).then(response => {
+                    return response;
+                }, err => {
+                    console.log('err', err);
+                    throw err;
+                })
+            }, err => {
+                console.log('err', err);
+                throw err;
+            });
+            // await ProductDAO.findOneAndUpdate(productValues);
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+    /**
+     * if product not ordered product will be delete otherwise status will be changes active to inactive
+     * @param {string} productId 
+     */
     static async deleteProduct(productId) {
         try {
 
@@ -99,7 +146,10 @@ class ProductService {
             throw err;
         }
     }
-    // to add a new product
+    /**
+     * to add a new product
+     * @param {object} product 
+     */
     static async addProducts(product) {
         try {
             await UserValidator.toCheckValidUserId(product.userId);
@@ -123,8 +173,12 @@ class ProductService {
             throw err;
         }
     }
-    // too change the product status active and inactive
-    static async changeStatus(productId, status) {
+    /**
+     * to change product status to be active or inactive
+     * @param {string} productId 
+     * @param {string} status 
+     */
+    static async changeStatusOld(productId, status) {
         try {
             var result = await ProductRepository.findOne(productId);
             console.log('result', result);
@@ -148,7 +202,41 @@ class ProductService {
             throw err;
         }
     }
-    //to count the ordered product 
+    /**
+       * to change product status to be active or inactive
+        * @param {string} productId 
+        * @param {string} status 
+        */
+    static async changeStatus(productId, status) {
+        ProductRepository.findOne(productId).then(result => {
+            console.log('result', result);
+            if (result) {
+                let isActive = result.active === true;
+                console.log("isActive", isActive);
+                if (status === isActive) {
+                    throw new Error(
+                        'Already record is ' + (isActive ? 'Active' : 'Inactive')
+                    );
+                }
+                result.active = !result.active;
+                // await ProductRepository.updateProductStatus(result.id, !result.active);
+                ProductRepository.updateProductStatus(result).then(response => {
+                    return response;
+                }, err => {
+                    console.log('err', err);
+                    throw err;
+                });
+            } else {
+                throw new Error('Please Enter valid Product ID');
+            }
+        }, err => {
+            console.log('err', err);
+            throw err;
+        });
+    }
+    /**
+     * product based report
+     */
     static async productReport() {
         try {
             let productCount = await ProductRepository.productReport();

@@ -1,12 +1,12 @@
 const axios = require('axios');
 const DB_URL = 'https://6a5a0e85-6282-465b-b46d-364a80e1b15d-bluemix.cloudantnosqldb.appdomain.cloud';
 class DAOUtil {
-
     /**
-  * 
-  * @param {*to add new order based on orderDetails} orderDetails 
-  */
-    static async  insert(url, requestedData) {
+     * insert a new data 
+     * @param {string} url 
+     * @param {object} requestedData 
+     */
+    static async insert(url, requestedData) {
         try {
             let result = await axios.request({
                 url: url,
@@ -24,8 +24,8 @@ class DAOUtil {
         }
     }
     /**
-     * 
-     * @param {*get one order based on id} id 
+     * to find one value
+     * @param {string} url 
      */
     static async findOne(url) {
         try {
@@ -46,8 +46,9 @@ class DAOUtil {
         }
     }
     /**
-    * get all products
-    */
+     * get values
+     * @param {string} url 
+     */
     static async getView(url) {
         let response = await axios.request({
             url: url,
@@ -65,9 +66,10 @@ class DAOUtil {
         return productList;
     }
     /**
-    * 
-    * @param {*to search the products based on user product filter brandName} brandNames 
-    */
+     * search the values based on user input
+     * @param {string} url 
+     * @param {object} requestedData 
+     */
     static async search(url, requestedData) {
         let response = await axios.request({
             url: url,
@@ -83,9 +85,10 @@ class DAOUtil {
         return productList;
     }
     /**
- * 
- * @param {*find one product and update product details} productValues 
- */
+     * find one data and update details
+     * @param {string} url 
+     * @param {object} requestedData 
+     */
     static async findAndUpdate(url, requestedData) {
         try {
             let response = await axios.request({
@@ -105,8 +108,9 @@ class DAOUtil {
         }
     }
     /**
-    * get pruduct based ordered count
-    */
+     * to get report 
+     * @param {string} url 
+     */
     static async report(url) {
         try {
             let response = await axios.request({
@@ -127,9 +131,10 @@ class DAOUtil {
         }
     }
     /**
-    * 
-    * @param {*get userId based user orders} userId 
-    */
+     * to find sub array field values 
+     * @param {string} url 
+     * @param {object} requestedData
+     */
     static async findBySubArray(url, requestedData) {
         let response = await axios.request({
             url: url,

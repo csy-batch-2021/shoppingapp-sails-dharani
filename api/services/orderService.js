@@ -5,8 +5,11 @@ const ProductService = require('../services/product.service');
 const UserValidator = require('../validator/userValidator');
 const OrderRepository = require('../repository/order.dao');
 class OrderService {
-    // to add a new order
-    static async addOrder(orderDetails) {
+    /**
+     * add a new order
+     * @param {Object} orderDetails 
+     */
+    static async addOrderNew(orderDetails) {
         try {
             await OrderValidator.validCheck(orderDetails);
             await OrderValidator.isValidId(orderDetails);
@@ -30,7 +33,48 @@ class OrderService {
             throw err;
         }
     }
-    //get all orders
+    /**
+     * add a new order
+     * @param {Object} orderDetails 
+     */
+    static async addOrder(orderDetails) {
+        try {
+            OrderValidator.validCheck(orderDetails).then(success => {
+                OrderValidator.isValidIdNew(orderDetails).then(success => {
+                    ProductService.getProductDetails(orderDetails.productId).then(product => {
+                        console.log("add order product details", product);
+                        orderDetails.total_amount = orderDetails.qty * product.price;
+                        orderDetails.status = 'ORDERED';
+                        orderDetails.created_date = new Date();
+                        orderDetails.modified_date = new Date();
+                        orderDetails.created_by = orderDetails.userId;
+                        orderDetails.modified_by = orderDetails.userId;
+                        orderDetails.name = product.name;
+                        orderDetails.price = product.price;
+                        orderDetails.user_name = orderDetails.userName;
+                        // await OrderDAO.save(orderDetails);
+                        OrderRepository.save(orderDetails).then(success => {
+                            return 'Product Ordered sucessfully';
+                        }, err => {
+                            throw err;
+                        });
+                    });
+                }, err => {
+                    console.log(err);
+                });
+
+            }, err => {
+                console.log(err);
+            });
+
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+    /**
+     * get all orders
+     */
     static async getAllOrder() {
         try {
             // return await OrderDAO.findAll();
@@ -40,7 +84,13 @@ class OrderService {
             throw new Error('Not able to fetch the orders');
         }
     }
-    // to change order status delivered
+
+    /**
+     * change order status to be ordered into delivered
+     * @param {string} orderId 
+     * @param {string} userId 
+     * @param {string}status 
+     */
     static async changeOrderStatus(orderId, userId, status) {
         try {
             let orderDetails = await OrderValidator.isValidForDelivery(orderId, status);
@@ -51,8 +101,12 @@ class OrderService {
             throw err;
         }
     }
-    // to cancel order
-    static async cancelOrder(orderDetails) {
+    /**
+     * to cancel the order 
+     * @param {obejct} orderDetails 
+     *  
+     */
+    static async cancelOrderOld(orderDetails) {
         try {
             console.log(orderDetails)
             let userId = orderDetails.userId;
@@ -68,7 +122,36 @@ class OrderService {
         }
     }
 
-    // to find by order based on user id
+    /**
+     * to cancel the order using promise 
+     * @param {obejct} orderDetails 
+     *  
+     */
+    static async cancelOrder(orderDetails) {
+        try {
+            let userId = orderDetails.userId;
+            let orderId = orderDetails.orderId;
+            OrderValidator.isExistOrderId(orderId).then(response => {
+                response.status = "CANCELLED";
+                OrderRepository.cancelOrder(response).then(response => {
+                    return 'Your Amount Has Successfully Refunded To Your Wallet';
+                }, err => {
+                    console.log('err', err);
+                    throw err;
+                });
+            }, err => {
+                console.log('err', err);
+                throw err;
+            });
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+    /**
+     * get myOrder based on userId
+     * @param {string} userId 
+     */
     static async getMyOrder(userId) {
         try {
             return await OrderRepository.findMyOrder(userId);
@@ -77,7 +160,10 @@ class OrderService {
             throw new Error('Not able to fetch the orders');
         }
     }
-    // to get my order counts
+    /**
+     * count the ordered status based
+     * @param {string} userId 
+     */
     static async myOrderStatusCount(userId) {
         try {
             return await OrderDAO.myOrdersStatusCount(userId);
@@ -86,7 +172,9 @@ class OrderService {
             throw new Error('Not able to fetch the orders');
         }
     }
-    //get User Order Report
+    /**
+     * user Ordered product report
+     */
     static async userOrderReport() {
         try {
             var result = await OrderDAO.userOrderReport();
@@ -97,7 +185,9 @@ class OrderService {
             throw new Error('Not able to fetch the Report');
         }
     }
-    // get Ordered Status Report
+    /**
+     * ordered product based status wise count
+     */
     static async orderStatusReport() {
         try {
             // return await OrderDAO.orderStatusReport();
@@ -110,6 +200,7 @@ class OrderService {
 }
 module.exports = {
     addOrder: OrderService.addOrder,
+    addOrderNew: OrderService.addOrderNew,
     getAllOrder: OrderService.getAllOrder,
     changeOrderStatus: OrderService.changeOrderStatus,
     cancelOrder: OrderService.cancelOrder,

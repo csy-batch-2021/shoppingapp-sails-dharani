@@ -1,7 +1,11 @@
 class UserRepository {
-    // get one user based on id
+    /**
+     * find one values based in id
+     * @param {string} id
+     */
     static async findOne(id) {
-        console.log(id);
+        return DAOUtil.findOne('/users/' + id);
+
         // let ds = await sails.getDatastore();
         // const result = await ds.sendNativeQuery('SELECT * FROM users where id=$1', [id]);
         // let data = result.rows;
